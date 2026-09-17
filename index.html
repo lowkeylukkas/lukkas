@@ -764,6 +764,8 @@
     transition: transform 0.15s ease;
   }
   .reaction-btn:hover { transform: scale(1.15); }
+  .reaction-btn:disabled { cursor: default; }
+  .reaction-btn.reacted { opacity: 0.72; }
   .reaction-count { font-size: 9px; font-weight: 700; color: #B7C4CC; }
   .float-emoji {
     position: fixed;
@@ -1084,9 +1086,6 @@
       <img src="https://i.pinimg.com/736x/0d/40/95/0d4095f604eace5f58d27e615c56c7ff.jpg" alt="Lukkas avatar">
     </div>
 
-    <button class="bible-btn" onclick="showVerse()">📖 Your Bible Verse</button>
-    <div class="bible-verse" id="bibleVerse"></div>
-
     <div class="name">Lukkas</div>
     <div class="tagline" id="tagline"></div>
     <div class="live-clock" id="liveClock"></div>
@@ -1154,6 +1153,8 @@
     </div>
 
     <button class="vibe-btn" onclick="rollVibe()">🎲 Roll my vibe</button>
+    <button class="bible-btn" onclick="showVerse()">📖 Your Bible Verse</button>
+    <div class="bible-verse" id="bibleVerse"></div>
     <button class="compliment-btn" onclick="getCompliment()">💌 Get a compliment</button>
     <div class="vibe-toast" id="vibeToast"></div>
   </div>
@@ -1496,19 +1497,34 @@
       }
     });
 
-    // emoji reaction bar (counts saved per browser)
+    // emoji reaction bar — one reaction per visitor/browser session
     const reactionKeys = { '😄': 'happy', '🔥': 'fire', '💙': 'heart', '😭': 'cry' };
     function loadReactionCounts() {
+      const reacted = safeGet('lukkas_reacted_once') === '1';
       Object.entries(reactionKeys).forEach(([emoji, key]) => {
-        const count = safeGet('lukkas_react_' + key) || '0';
+        const count = reacted && safeGet('lukkas_react_' + key) === '1' ? '1' : '0';
         document.getElementById('count-' + key).textContent = count;
       });
+      if (reacted) {
+        document.querySelectorAll('.reaction-btn').forEach(b => {
+          b.disabled = true;
+          b.classList.add('reacted');
+        });
+      }
     }
     function react(emoji, btn) {
+      if (safeGet('lukkas_reacted_once') === '1') return;
       const key = reactionKeys[emoji];
-      const newCount = parseInt(safeGet('lukkas_react_' + key) || '0', 10) + 1;
-      safeSet('lukkas_react_' + key, newCount);
-      document.getElementById('count-' + key).textContent = newCount;
+      safeSet('lukkas_react_' + key, '1');
+      safeSet('lukkas_reacted_once', '1');
+      Object.keys(reactionKeys).forEach(e => {
+        const k = reactionKeys[e];
+        document.getElementById('count-' + k).textContent = e === emoji ? '1' : '0';
+      });
+      document.querySelectorAll('.reaction-btn').forEach(b => {
+        b.disabled = true;
+        b.classList.add('reacted');
+      });
       playClick(850);
       const rect = btn.getBoundingClientRect();
       const floater = document.createElement('div');
@@ -1871,4 +1887,3 @@
 </script>
 </body>
 </html>
-

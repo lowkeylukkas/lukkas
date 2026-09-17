@@ -1,0 +1,1862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<title>Lukkas</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    background-color: #050916;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* WebView-safe animated background: kept separate from the page content. */
+    background: #050916;
+    font-family: 'Segoe UI', 'Poppins', sans-serif;
+    padding: 40px 16px;
+    position: relative;
+    overflow-x: hidden;
+  }
+  html, body {
+    background-color: #050916;
+    overflow-x: hidden;
+    overflow-y: auto;
+    min-height: 100%;
+    height: auto;
+  }
+
+  /* The fixed layer avoids iOS/Android WebView bugs with background-attachment: fixed. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(rgba(3, 7, 20, 0.28), rgba(3, 7, 20, 0.28)),
+      url("https://file.garden/aqtBi-Lyx_Xl-djC/From%20Klickpin.com-%20Try%20Practical%20capsule%20wardrobe%20outfits%20that%20help%20you%20create%20a%20beautiful%20result%20without%20overspending%20for%20ideas%20worth%20saving%20righ.gif") center center / cover no-repeat;
+    transform: translateZ(0);
+  }
+
+  body > * { position: relative; z-index: 1; }
+  /* Keep the requested animated GIF visible behind the profile card. */
+  @media (max-width: 600px) {
+    body {
+      background-color: #050916;
+      padding-left: 10px;
+      padding-right: 10px;
+      align-items: flex-start;
+      padding-top: 20px;
+    }
+    body::before {
+      background-position: center top;
+      background-size: auto 100%;
+    }
+  }
+
+
+
+  /* ---------- MOBILE + FACEBOOK WEBVIEW HARDENING ---------- */
+  @media (max-width: 760px) {
+    .card {
+      max-width: 100%;
+      width: min(420px, 100%);
+      padding: 28px 18px 24px;
+      border-radius: 22px;
+    }
+    .avatar-wrap { width: 150px; height: 150px; margin-bottom: 18px; }
+    h1 { font-size: 23px; }
+    .name { font-size: 20px; }
+    .socials { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .socials a { padding: 12px 8px; font-size: 13px !important; }
+    .game-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  }
+
+  @media (max-width: 420px) {
+    body { padding: 12px 8px 24px; }
+    .card { padding: 24px 14px 20px; }
+    .avatar-wrap { width: 132px; height: 132px; }
+    .tabs { gap: 4px; }
+    .tab-btn { padding: 9px 6px; font-size: 12px; }
+    .socials { grid-template-columns: 1fr; }
+    .game-grid { grid-template-columns: 1fr 1fr !important; gap: 8px !important; }
+  }
+
+  @media (min-width: 761px) {
+    body { padding: 48px 24px; }
+    .card { max-width: 460px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  }
+
+  html.meta-webview body::before {
+    transform: none;
+  }
+  html.meta-webview .card {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  html.meta-webview .music-panel,
+  html.meta-webview .music-open {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* ---------- COMPACT MUSIC LAUNCHER + POPUP ---------- */
+  .music-open {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    z-index: 1100;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid rgba(149,195,255,.38);
+    background: rgba(10,15,31,.94);
+    color: #c7dcf4;
+    font: 700 21px/1 'Cormorant Garamond', serif;
+    cursor: pointer;
+    box-shadow: 0 8px 26px rgba(0,0,0,.45);
+    backdrop-filter: blur(12px);
+  }
+
+  .music-open:hover,
+  .music-open:focus-visible {
+    transform: translateY(-2px);
+    background: rgba(24,38,65,.98);
+  }
+
+  .music-panel {
+    position: fixed;
+    right: 18px;
+    bottom: 76px;
+    z-index: 1099;
+    width: 220px;
+    padding: 14px;
+    display: none;
+    flex-direction: column;
+    gap: 9px;
+    background: rgba(7,12,27,.97);
+    border: 1px solid rgba(149,195,255,.30);
+    border-radius: 18px;
+    box-shadow: 0 14px 38px rgba(0,0,0,.55);
+    backdrop-filter: blur(16px);
+  }
+
+  .music-panel.open {
+    display: flex;
+    animation: musicPop .16s ease-out;
+  }
+
+  @keyframes musicPop {
+    from { opacity: 0; transform: translateY(8px) scale(.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .music-panel-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #8dd8ff;
+    font: 700 17px/1 'Cormorant Garamond', serif;
+  }
+
+  .music-close {
+    border: 0;
+    background: transparent;
+    color: #8294b7;
+    font-size: 22px;
+    cursor: pointer;
+    padding: 0 2px;
+  }
+
+  .music-main-btn {
+    align-self: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid #385176;
+    background: #16243d;
+    color: #c7dcf4;
+    font-size: 15px;
+    cursor: pointer;
+  }
+
+  .track-name {
+    color: #8795b7;
+    font: 500 11px/1.3 'Cormorant Garamond', serif;
+    text-align: center;
+    overflow-wrap: anywhere;
+  }
+
+  .music-track-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .trackBtn,
+  .mute-btn {
+    width: 100%;
+    border: 1px solid #31496e;
+    background: #101b32;
+    color: #9fb1d1;
+    border-radius: 11px;
+    padding: 8px;
+    font: 600 11px/1.1 'Cormorant Garamond', serif;
+    cursor: pointer;
+  }
+
+  .trackBtn.active,
+  .trackBtn:hover,
+  .trackBtn:focus-visible {
+    background: #203657;
+    color: #cce6ff;
+    border-color: #6288b5;
+  }
+
+  .volume-title {
+    color: #8795b7;
+    font: 600 10px/1 'Cinzel', serif;
+    letter-spacing: .5px;
+  }
+
+  .volume-slider {
+    width: 100%;
+    accent-color: #8dd8ff;
+  }
+
+  .mute-btn {
+    background: #151f35;
+  }
+
+  @media (max-width: 760px) {
+    body {
+      padding-bottom: 28px;
+    }
+
+    .music-open {
+      right: 14px;
+      bottom: 14px;
+      width: 44px;
+      height: 44px;
+    }
+
+    .music-panel {
+      right: 12px;
+      bottom: 68px;
+      width: min(230px, calc(100vw - 24px));
+      max-height: 72vh;
+      overflow-y: auto;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .music-panel {
+      right: 10px;
+      width: calc(100vw - 20px);
+    }
+  }
+
+  /* ---------- ARMAGEDDON TYPOGRAPHY ---------- */
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=UnifrakturCook:wght@700&display=swap');
+
+  body,
+  button,
+  .pill,
+  .socials a,
+  .game-tile,
+  .footer-note,
+  .reaction-btn,
+  .achievement,
+  .secret-panel,
+  .visit-badge {
+    font-family: 'Cormorant Garamond', Georgia, serif !important;
+  }
+
+  h1 {
+    font-family: 'UnifrakturCook', 'UnifrakturMaguntia', 'Old English Text MT', serif !important;
+    font-weight: 700 !important;
+    letter-spacing: 0 !important;
+  }
+
+  .name,
+  .section-label,
+  .tab-btn,
+  .greeting,
+  .achieve-badge,
+  .g-label {
+    font-family: 'Cinzel', 'Times New Roman', serif !important;
+  }
+
+  .name {
+    letter-spacing: 1px !important;
+  }
+
+  .section-label {
+    letter-spacing: 2px !important;
+  }
+
+  .tagline {
+    font-family: 'Cormorant Garamond', Georgia, serif !important;
+    font-size: 16px !important;
+    letter-spacing: 0.2px;
+  }
+
+  .live-clock,
+  .visit-badge {
+    font-family: 'Cormorant Garamond', Georgia, serif !important;
+    font-size: 13px !important;
+  }
+
+  .pill {
+    font-size: 14px !important;
+  }
+
+  .socials a,
+  .tab-btn,
+  .bible-btn,
+  .vibe-btn,
+  .compliment-btn {
+    font-size: 14px !important;
+  }
+
+  /* ---------- ARMAGEDDON THEME ---------- */
+  .card {
+    background: rgba(10, 15, 31, 0.90);
+    border-color: rgba(149, 195, 255, 0.22);
+    box-shadow: 0 18px 55px rgba(0,0,0,0.58), 0 0 0 1px rgba(255,255,255,0.03) inset;
+    color: #eef3ff;
+    backdrop-filter: blur(10px);
+  }
+  .name { color: #f4f6ff; }
+  .tagline, .greeting { color: #9fdcff; }
+  .tabs { background: rgba(18,25,48,0.92); }
+  .tab-btn { color: #8f9db8; }
+  .tab-btn.active { background: #16284b; color: #9fdcff; box-shadow: 0 4px 12px -4px rgba(76,160,255,0.35); }
+  .section-label { color: #91a4c5; }
+  .pill { background: #18213b; color: #c7d6ff; border-color: #283a61; }
+  .pill.blue { background: #132d43; color: #8dd8ff; border-color: #244d68; }
+  .achievement, .vibe-toast, .visit-badge, .bible-verse, .secret-panel { background: rgba(12,19,38,0.96); color: #dfe9ff; border-color: #2b4772; }
+  .achievement { color: #a9e2ff; }
+  .achieve-badge { color: #9fb1d1; }
+  .achieve-badge:hover { color: #8bd9ff; background: rgba(76,160,255,0.10); }
+  .bible-verse .verse-ref { color: #8fdcff; }
+  .footer-note { color: #8795b7; }
+  .reaction-btn { background: #121d36; border-color: #29456c; }
+  .vibe-btn, .compliment-btn, .bible-btn { background: linear-gradient(135deg, #173557, #18304a); color: #bdeaff; border-color: #315b82; }
+  .visit-badge { color: #8fb4d9; }
+  .live-clock { color: #9bcfff; }
+  .deco { color: #7183A0; }
+  .icon { filter: brightness(0.62) saturate(0.72); }
+  .socials .fb { background: #17243a; color: #7f9bbd; }
+  .socials .ig { background: #2b2630; color: #b29a72; }
+  .socials .pin { background: #2b2027; color: #b77c8e; }
+  .socials .lastfm { background: #2c211f; color: #b87a67; }
+  h1 { color: #dce5f4; }
+  .card {
+    width: 100%;
+    max-width: 420px;
+    background: #FFFFFF;
+    border-radius: 28px;
+    padding: 40px 32px 32px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(180, 200, 220, 0.35);
+    border: 1px solid #F3F0DE;
+    position: relative;
+    z-index: 1;
+  }
+  .deco {
+    font-size: 15px;
+    color: #9CD6E8;
+    letter-spacing: 2px;
+  }
+  h1 {
+    margin: 6px 0 18px;
+    font-size: 26px;
+    color: #5FB8D6;
+    font-weight: 700;
+  }
+  .avatar-wrap {
+    width: 190px;
+    height: 190px;
+    margin: 0 auto 22px;
+    border-radius: 50%;
+    padding: 4px;
+    background: linear-gradient(135deg, #FFF3B0, #BFE8F5);
+    cursor: pointer;
+    transition: transform 0.15s ease;
+  }
+  .avatar-wrap:active { transform: scale(0.94); }
+  .avatar-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid #FFFFFF;
+    display: block;
+  }
+
+  /* ---------- BIBLE VERSE ---------- */
+  .bible-btn {
+    margin: 4px 0 6px;
+    background: linear-gradient(135deg, #FFE79A, #BFE8F5);
+    border: none;
+    padding: 11px 20px;
+    border-radius: 14px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    color: #7A6A2E;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+  }
+  .bible-btn:hover { transform: scale(1.05); }
+  .bible-btn:active { transform: scale(0.95); }
+  .bible-verse {
+    display: none;
+    margin: 12px auto 18px;
+    max-width: 340px;
+    background: #FBF9F0;
+    border: 1px solid #F3EAC9;
+    border-radius: 16px;
+    padding: 16px 18px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #6E6248;
+    font-style: italic;
+  }
+  .bible-verse.show { display: block; animation: fadeIn 0.3s ease; }
+  .bible-verse .verse-ref {
+    display: block;
+    margin-top: 8px;
+    font-size: 11.5px;
+    font-weight: 700;
+    font-style: normal;
+    color: #C9A227;
+    letter-spacing: 0.5px;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+  .name {
+    font-size: 22px;
+    font-weight: 700;
+    color: #4A4A4A;
+    margin-bottom: 4px;
+  }
+  .tagline {
+    font-size: 13.5px;
+    color: #B7A96A;
+    margin-bottom: 20px;
+    font-style: italic;
+    cursor: pointer;
+  }
+  .tagline .cursor-blink {
+    display: inline-block;
+    width: 2px;
+    background: #B7A96A;
+    margin-left: 2px;
+    animation: blink 0.8s steps(1) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* ---------- TABS ---------- */
+  .tabs {
+    display: flex;
+    gap: 8px;
+    background: #FBF9F0;
+    border-radius: 14px;
+    padding: 5px;
+    margin-bottom: 24px;
+  }
+  .tab-btn {
+    flex: 1;
+    border: none;
+    background: transparent;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #A9B4B8;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .tab-btn.active {
+    background: #FFFFFF;
+    color: #58B4D6;
+    box-shadow: 0 4px 12px -4px rgba(150,190,210,0.5);
+  }
+  .tab-panel { display: none; text-align: center; }
+  .tab-panel.active { display: block; animation: fadeIn 0.25s ease; }
+
+  .section-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #A9C9D8;
+    margin: 22px 0 10px;
+    font-weight: 600;
+  }
+  .interests {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 6px;
+  }
+  .pill {
+    background: #FFFBEA;
+    color: #7A9FAE;
+    border: 1px solid #EAF6FB;
+    padding: 7px 14px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    transition: transform 0.2s ease;
+  }
+  .pill:hover { transform: scale(1.12) rotate(-3deg); }
+  .pill.blue { background: #EAF6FB; color: #5FA9C4; border-color: #FFF6D6; }
+  .socials {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-top: 18px;
+  }
+  .socials a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+    font-size: 14.5px;
+    font-weight: 700;
+    padding: 14px 18px;
+    border-radius: 16px;
+    transition: transform 0.15s ease;
+  }
+  .socials a:hover { transform: translateY(-2px); }
+  .fb { background: #EAF6FB; color: #4A90B8; }
+  .ig { background: #FFF7DE; color: #C9A227; }
+  .pin { background: #FFF0F0; color: #C8586A; }
+  .lastfm { background: #FFF0EA; color: #D5401F; }
+  .icon { width: 19px; height: 19px; }
+  .footer-note {
+    margin-top: 26px;
+    font-size: 11.5px;
+    color: #C9CFCB;
+    letter-spacing: 0.5px;
+  }
+  .games-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+  .game-tile {
+    aspect-ratio: 16 / 9;
+    border-radius: 18px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 8px 18px -6px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.35);
+    border: 1px solid rgba(255,255,255,0.4);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .game-tile::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 45%, rgba(0,0,0,0.08) 100%);
+    pointer-events: none;
+  }
+  .game-tile:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 22px -8px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.4);
+  }
+  .g-label {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    font-size: 13px;
+  }
+  .g-main {
+    font-size: 10px;
+    font-weight: 500;
+    opacity: 0.85;
+    letter-spacing: 0.3px;
+  }
+
+  /* ---------- INTERACTIVE EXTRAS ---------- */
+  .bg-sparkle {
+    position: fixed;
+    pointer-events: none;
+    font-size: 14px;
+    opacity: 0.5;
+    animation: floatUp linear infinite;
+    z-index: 0;
+  }
+  @keyframes floatUp {
+    0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.6; }
+    90% { opacity: 0.6; }
+    100% { transform: translateY(-110vh) rotate(180deg); opacity: 0; }
+  }
+  .cursor-sparkle {
+    position: fixed;
+    pointer-events: none;
+    font-size: 12px;
+    z-index: 998;
+    animation: sparkleFade 0.7s ease-out forwards;
+  }
+  @keyframes sparkleFade {
+    0% { opacity: 0.9; transform: scale(1) translateY(0); }
+    100% { opacity: 0; transform: scale(0.4) translateY(-16px); }
+  }
+
+  /* ---------- ACHIEVEMENT TOAST ---------- */
+  .achievement {
+    position: fixed;
+    bottom: -80px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #FFFFFF;
+    border: 1px solid #FFE79A;
+    padding: 14px 22px;
+    border-radius: 16px;
+    box-shadow: 0 12px 30px -10px rgba(0,0,0,0.3);
+    font-size: 13px;
+    font-weight: 700;
+    color: #C9A227;
+    z-index: 1001;
+    transition: bottom 0.5s ease;
+    white-space: nowrap;
+  }
+  .achievement.show { bottom: 30px; }
+  .achieve-badge {
+    border: 0;
+    background: transparent;
+    font: inherit;
+    color: #A9B4B8;
+    cursor: pointer;
+    padding: 3px 8px;
+    border-radius: 10px;
+    transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
+  }
+  .achieve-badge:hover { background: rgba(120,180,220,0.10); color: #58B4D6; }
+  .achieve-badge:active { transform: scale(0.97); }
+  .secret-panel {
+    display: none;
+    margin: 8px auto 16px;
+    max-width: 330px;
+    padding: 10px 12px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.72);
+    border: 1px solid #E5EAF0;
+    text-align: left;
+    font-size: 11px;
+    line-height: 1.6;
+  }
+  .secret-panel.show { display: block; animation: fadeIn 0.2s ease; }
+  .secret-item { display: flex; gap: 7px; align-items: center; padding: 3px 0; }
+  .secret-item.locked { opacity: 0.48; }
+
+  .burst-piece {
+    position: fixed;
+    pointer-events: none;
+    font-size: 20px;
+    animation: burstOut 0.9s ease-out forwards;
+    z-index: 999;
+  }
+  @keyframes burstOut {
+    0% { transform: translate(0,0) scale(0.6); opacity: 1; }
+    100% { transform: translate(var(--dx), var(--dy)) scale(1.1); opacity: 0; }
+  }
+
+  /* ---------- VIBE ROLL BUTTON ---------- */
+  .vibe-btn {
+    margin-top: 18px;
+    background: linear-gradient(135deg, #FFE79A, #BFE8F5);
+    border: none;
+    padding: 11px 20px;
+    border-radius: 14px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    color: #7A6A2E;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+  }
+  .vibe-btn:hover { transform: scale(1.05); }
+  .vibe-btn:active { transform: scale(0.95); }
+  .vibe-toast {
+    margin-top: 12px;
+    font-size: 12.5px;
+    color: #6EA9BE;
+    font-weight: 600;
+    min-height: 18px;
+  }
+
+  .greeting {
+    font-size: 12px;
+    font-weight: 600;
+    color: #A9C9D8;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .live-clock {
+    font-size: 11.5px;
+    color: #C9CFCB;
+    font-variant-numeric: tabular-nums;
+    margin-top: -8px;
+    margin-bottom: 16px;
+  }
+  .visit-badge {
+    font-size: 11px;
+    color: #C9CFCB;
+    margin-top: 6px;
+  }
+  .achieve-badge {
+    display: inline-block;
+    font-size: 10.5px;
+    font-weight: 700;
+    color: #C9A227;
+    background: #FFFBEA;
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-top: 8px;
+  }
+  .reactions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .reaction-btn {
+    background: #FBF9F0;
+    border: none;
+    border-radius: 12px;
+    padding: 8px 12px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    transition: transform 0.15s ease;
+  }
+  .reaction-btn:hover { transform: scale(1.15); }
+  .reaction-count { font-size: 9px; font-weight: 700; color: #B7C4CC; }
+  .float-emoji {
+    position: fixed;
+    pointer-events: none;
+    font-size: 20px;
+    z-index: 999;
+    animation: floatAway 1s ease-out forwards;
+  }
+  @keyframes floatAway {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(-70px); opacity: 0; }
+  }
+  .compliment-btn {
+    margin-top: 10px;
+    background: linear-gradient(135deg, #FFC9DC, #C9E8FF);
+    border: none;
+    padding: 11px 20px;
+    border-radius: 14px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    color: #A85A78;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+  }
+  .compliment-btn:hover { transform: scale(1.05); }
+  .compliment-btn:active { transform: scale(0.95); }
+  .avatar-wrap.rainbow-charge {
+    animation: rainbowSpin 1.2s linear;
+  }
+  @keyframes rainbowSpin {
+    0% { background: conic-gradient(red, orange, yellow, green, blue, violet, red); }
+    100% { background: conic-gradient(from 360deg, red, orange, yellow, green, blue, violet, red); }
+  }
+  .ripple {
+    position: fixed;
+    border-radius: 50%;
+    border: 2px solid rgba(150,190,210,0.5);
+    pointer-events: none;
+    z-index: 0;
+    animation: rippleOut 0.8s ease-out forwards;
+  }
+  @keyframes rippleOut {
+    0% { width: 0; height: 0; opacity: 0.8; }
+    100% { width: 120px; height: 120px; margin-left: -60px; margin-top: -60px; opacity: 0; }
+  }
+
+  /* ---------- FINAL ARMAGEDDON POLISH ---------- */
+  body {
+    background-color: #050916;
+    color: #dfe7f5;
+  }
+  .card {
+    background: rgba(10, 15, 31, 0.90) !important;
+    border: 1px solid rgba(149, 195, 255, 0.22) !important;
+    box-shadow: 0 18px 55px rgba(0,0,0,0.58), 0 0 0 1px rgba(255,255,255,0.03) inset !important;
+    color: #eef3ff !important;
+    backdrop-filter: blur(10px);
+  }
+  .deco { color: #7183a0 !important; }
+  h1 { color: #dce5f4 !important; letter-spacing: 0.5px; }
+  .name { color: #f4f6ff !important; }
+  .tagline, .greeting { color: #9fdcff !important; }
+  .tabs { background: rgba(18,25,48,0.92) !important; }
+  .tab-btn { color: #8f9db8 !important; }
+  .tab-btn.active { background: #16284b !important; color: #9fdcff !important; }
+  .section-label { color: #91a4c5 !important; }
+  .pill { background: #18213b !important; color: #c7d6ff !important; border-color: #283a61 !important; }
+  .pill.blue { background: #132d43 !important; color: #8dd8ff !important; border-color: #244d68 !important; }
+  .socials .fb { background: #17243a !important; color: #7f9bbd !important; }
+  .socials .ig { background: #2b2630 !important; color: #b29a72 !important; }
+  .socials .pin { background: #2b2027 !important; color: #b77c8e !important; }
+  .socials .lastfm { background: #2c211f !important; color: #b87a67 !important; }
+  .icon { filter: brightness(0.55) saturate(0.65) !important; }
+  .bible-btn, .vibe-btn, .compliment-btn {
+    background: linear-gradient(135deg, #202f4b, #17243b) !important;
+    color: #c7dcf4 !important;
+    border: 1px solid #385176 !important;
+  }
+  .bible-verse, .secret-panel { background: rgba(12,19,38,0.96) !important; color: #dfe9ff !important; border-color: #2b4772 !important; }
+  .achieve-badge { color: #9fb1d1 !important; }
+  .achieve-badge:hover { color: #8bd9ff !important; background: rgba(76,160,255,0.10) !important; }
+  .footer-note { color: #8795b7 !important; }
+  .live-clock { color: #9bcfff !important; }
+  .reaction-btn { background: #121d36 !important; border-color: #29456c !important; color: #b9c9e2 !important; }
+  .avatar-wrap { background: linear-gradient(135deg, #334766, #1d314f) !important; }
+  .avatar-wrap img { border-color: #172036 !important; }
+
+
+
+  /* ---------- CROSS-DEVICE / APPLE / META WEBVIEW COMPATIBILITY ---------- */
+  :root {
+    color-scheme: dark;
+    -webkit-tap-highlight-color: transparent;
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    overflow-x: hidden;
+    background: #050916;
+  }
+  body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    width: 100%;
+    overflow-x: hidden;
+    overscroll-behavior-x: none;
+    padding-top: max(24px, env(safe-area-inset-top));
+    padding-right: max(16px, env(safe-area-inset-right));
+    padding-bottom: max(32px, env(safe-area-inset-bottom));
+    padding-left: max(16px, env(safe-area-inset-left));
+  }
+
+  /* Use a real IMG for the animated GIF. This is generally more reliable in iOS
+     Safari and embedded WebViews than a fixed pseudo-element background. */
+  body::before { display: none !important; }
+  .page-bg {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    min-height: 100% !important;
+    height: 100% !important;
+    z-index: 0 !important;
+    pointer-events: none !important;
+    overflow: hidden !important;
+    background: #050916 !important;
+  }
+  .page-bg img {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 100vh !important;
+    min-height: 100dvh !important;
+    object-fit: cover !important;
+    object-position: center center !important;
+    user-select: none !important;
+    -webkit-user-drag: none !important;
+  }
+  body > * { position: relative; }
+  .page-bg { position: absolute !important; z-index: 0 !important; }
+  .card { z-index: 2 !important; }
+
+  /* The mobile grid actually targets .games-grid (not the old typo .game-grid). */
+  .games-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  button, a, input, .avatar-wrap, .game-tile {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  @media (hover: none), (pointer: coarse) {
+    .pill:hover,
+    .socials a:hover,
+    .game-tile:hover,
+    .vibe-btn:hover,
+    .compliment-btn:hover,
+    .reaction-btn:hover,
+    .music-open:hover,
+    .achieve-badge:hover,
+    .trackBtn:hover {
+      transform: none !important;
+    }
+    .cursor-sparkle { display: none !important; }
+  }
+
+  @media (min-width: 761px) {
+    body {
+      align-items: center;
+      justify-content: center;
+      padding-top: 48px;
+      padding-right: max(24px, env(safe-area-inset-right));
+      padding-bottom: 48px;
+      padding-left: max(24px, env(safe-area-inset-left));
+    }
+    .card {
+      width: min(460px, calc(100vw - 48px));
+    }
+    .games-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 760px) {
+    body {
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: max(18px, env(safe-area-inset-top));
+      padding-right: max(10px, env(safe-area-inset-right));
+      padding-bottom: max(30px, env(safe-area-inset-bottom));
+      padding-left: max(10px, env(safe-area-inset-left));
+    }
+    .card {
+      width: min(100%, 460px) !important;
+      max-width: 460px !important;
+      padding: 28px 18px 24px !important;
+      border-radius: 22px !important;
+      margin: 0 auto;
+    }
+    .avatar-wrap {
+      width: clamp(124px, 36vw, 150px) !important;
+      height: clamp(124px, 36vw, 150px) !important;
+    }
+    .tabs {
+      width: 100%;
+    }
+    .tab-btn {
+      min-height: 42px;
+    }
+    .socials a,
+    .bible-btn,
+    .vibe-btn,
+    .compliment-btn,
+    .reaction-btn,
+    .achieve-badge,
+    .music-open,
+    .music-main-btn,
+    .music-close,
+    .trackBtn,
+    .mute-btn {
+      min-height: 42px;
+    }
+    .games-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 9px !important;
+    }
+    .game-tile {
+      min-width: 0;
+    }
+    .music-open {
+      right: max(14px, env(safe-area-inset-right));
+      bottom: max(14px, env(safe-area-inset-bottom));
+    }
+    .music-panel {
+      right: max(12px, env(safe-area-inset-right));
+      bottom: calc(68px + env(safe-area-inset-bottom));
+      width: min(250px, calc(100vw - 24px));
+      max-height: min(70vh, 520px);
+      max-height: min(70dvh, 520px);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+  }
+
+  @media (max-width: 420px) {
+    body {
+      padding-top: max(12px, env(safe-area-inset-top));
+      padding-right: max(8px, env(safe-area-inset-right));
+      padding-bottom: max(26px, env(safe-area-inset-bottom));
+      padding-left: max(8px, env(safe-area-inset-left));
+    }
+    .card {
+      padding: 24px 14px 20px !important;
+    }
+    .socials {
+      grid-template-columns: 1fr 1fr !important;
+      gap: 8px !important;
+    }
+    .socials a {
+      padding: 11px 7px !important;
+      font-size: 13px !important;
+    }
+    .games-grid {
+      grid-template-columns: 1fr 1fr !important;
+    }
+    .g-label { font-size: 11px !important; }
+    .g-main { font-size: 9px !important; }
+    .music-panel {
+      right: max(10px, env(safe-area-inset-right));
+      width: calc(100vw - 20px);
+    }
+  }
+
+  /* iPhone/iPad WebKit. Keep the profile opaque enough that a missing blur
+     implementation can never turn the page unreadable. */
+  @supports (-webkit-touch-callout: none) {
+    .card,
+    .music-panel {
+      -webkit-backdrop-filter: none !important;
+      backdrop-filter: none !important;
+    }
+    .card { background: rgba(10, 15, 31, 0.96) !important; }
+    .music-panel { background: rgba(7, 12, 27, 0.98) !important; }
+  }
+
+  html.meta-webview .page-bg img {
+    transform: translateZ(0);
+    will-change: auto;
+  }
+  html.meta-webview body {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  html.bg-failed body { background: #050916 !important; }
+
+</style>
+</head>
+<body>
+  <div class="page-bg" aria-hidden="true"><img src="https://file.garden/aqtBi-Lyx_Xl-djC/From%20Klickpin.com-%20Try%20Practical%20capsule%20wardrobe%20outfits%20that%20help%20you%20create%20a%20beautiful%20result%20without%20overspending%20for%20ideas%20worth%20saving%20righ.gif" alt="" loading="eager" decoding="async" onerror="this.style.display='none'; document.documentElement.classList.add('bg-failed');"></div>
+  <div class="achievement" id="achievement"></div>
+<div class="card">
+    <div class="deco">✧ ────────── ✧</div>
+    <div class="greeting" id="greeting"></div>
+    <h1>𝔴𝔢𝔩𝔠𝔬𝔪𝔢 𝔱𝔬 𝔪𝔶 𝔡𝔞𝔴𝔫</h1>
+
+    <div class="avatar-wrap" onclick="burstSparkles(event)" id="avatarWrap">
+      <img src="https://i.pinimg.com/736x/0d/40/95/0d4095f604eace5f58d27e615c56c7ff.jpg" alt="Lukkas avatar">
+    </div>
+
+    <button class="bible-btn" onclick="showVerse()">📖 Your Bible Verse</button>
+    <div class="bible-verse" id="bibleVerse"></div>
+
+    <div class="name">Lukkas</div>
+    <div class="tagline" id="tagline"></div>
+    <div class="live-clock" id="liveClock"></div>
+    <button class="achieve-badge" id="achieveBadge" type="button" onclick="toggleSecrets()">0/8 secrets found</button>
+    <div class="secret-panel" id="secretPanel" aria-live="polite"></div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab('profile', this)">Profile</button>
+      <button class="tab-btn" onclick="showTab('games', this)">Games I Play</button>
+    </div>
+
+    <div id="tab-profile" class="tab-panel active">
+      <div class="section-label">Interests</div>
+      <div class="interests">
+        <span class="pill">Badminton</span>
+        <span class="pill blue">Volleyball</span>
+        <span class="pill">Music</span>
+        <span class="pill blue">K-pop</span>
+        <span class="pill">Swimming</span>
+        <span class="pill blue">Jogging</span>
+        <span class="pill">Gym</span>
+      </div>
+
+      <div class="section-label">Find Me</div>
+      <div class="socials">
+        <a class="fb" href="https://www.facebook.com/lukkashere/" target="_blank" rel="noopener noreferrer" onclick="socialClick(event)">
+          <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.51 17.52 2 12 2S2 6.51 2 12.06c0 5 3.66 9.14 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.51 1.49-3.9 3.77-3.9 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.89h2.78l-.44 2.91h-2.34V22c4.78-.8 8.44-4.94 8.44-9.94z"/></svg>
+          Facebook
+        </a>
+        <a class="ig" href="https://www.instagram.com/lukkaslowkey/" target="_blank" rel="noopener noreferrer" onclick="socialClick(event)">
+          <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c2.72 0 3.06.01 4.12.06 1.06.05 1.79.22 2.43.47.66.26 1.22.6 1.77 1.15.55.55.9 1.11 1.15 1.77.25.64.42 1.37.47 2.43.05 1.06.06 1.4.06 4.12s-.01 3.06-.06 4.12c-.05 1.06-.22 1.79-.47 2.43a4.9 4.9 0 0 1-1.15 1.77 4.9 4.9 0 0 1-1.77 1.15c-.64.25-1.37.42-2.43.47-1.06.05-1.4.06-4.12.06s-3.06-.01-4.12-.06c-1.06-.05-1.79-.22-2.43-.47a4.9 4.9 0 0 1-1.77-1.15 4.9 4.9 0 0 1-1.15-1.77c-.25-.64-.42-1.37-.47-2.43C2.01 15.06 2 14.72 2 12s.01-3.06.06-4.12c.05-1.06.22-1.79.47-2.43.26-.66.6-1.22 1.15-1.77A4.9 4.9 0 0 1 5.45.53C6.09.28 6.82.11 7.88.06 8.94.01 9.28 0 12 0zm0 5.84A6.16 6.16 0 1 0 12 18.16 6.16 6.16 0 0 0 12 5.84zm0 10.16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.4-10.4a1.44 1.44 0 1 1-2.88 0 1.44 1.44 0 0 1 2.88 0z" transform="translate(0 2)"/></svg>
+          Instagram
+        </a>
+        <a class="pin" href="https://pin.it/3pwCPEXxb" target="_blank" rel="noopener noreferrer" onclick="socialClick(event)">
+          <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.08 3.16 9.42 7.62 11.17-.1-.95-.2-2.4.04-3.44.22-.94 1.4-6 1.4-6s-.36-.72-.36-1.78c0-1.67.97-2.92 2.17-2.92 1.02 0 1.52.77 1.52 1.68 0 1.03-.65 2.56-.99 3.98-.28 1.19.6 2.16 1.77 2.16 2.13 0 3.77-2.24 3.77-5.48 0-2.87-2.06-4.87-5-4.87-3.41 0-5.41 2.56-5.41 5.2 0 1.03.4 2.13.89 2.73.1.12.11.22.08.34-.09.37-.29 1.19-.33 1.36-.05.22-.17.27-.4.16-1.49-.69-2.42-2.87-2.42-4.62 0-3.76 2.73-7.22 7.88-7.22 4.14 0 7.36 2.95 7.36 6.89 0 4.11-2.59 7.42-6.19 7.42-1.21 0-2.35-.63-2.74-1.37l-.74 2.83c-.27 1.04-1 2.34-1.49 3.14A12 12 0 1 0 12 0z"/></svg>
+          Pinterest
+        </a>
+        <a class="lastfm" href="https://www.last.fm/user/whiskeykisako" target="_blank" rel="noopener noreferrer" onclick="socialClick(event)">
+          <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M10.584 0 0 3.334v17.332L10.584 24l10.584-3.334V3.334L10.584 0zm3.996 17.79c-1.68 0-2.856-.882-3.708-2.478l-.822-1.554c-.564-1.05-1.176-1.998-2.316-1.998-.996 0-1.638.678-1.638 1.578 0 1.05.744 1.62 1.836 1.62.522 0 .924-.126 1.29-.336l.564 1.446c-.564.336-1.35.522-2.106.522-1.986 0-3.408-1.242-3.408-3.09 0-1.86 1.41-3.156 3.36-3.156 1.746 0 2.706 1.008 3.402 2.34l.816 1.548c.51.966 1.026 1.518 1.884 1.518 1.146 0 1.752-.876 1.752-2.058 0-1.62-1.152-2.856-2.808-2.856-.564 0-1.038.114-1.404.276l-.51-1.464c.522-.246 1.242-.408 2.028-.408 2.556 0 4.446 1.83 4.446 4.398 0 2.256-1.536 3.802-3.658 3.802z"/></svg>
+          Last.fm
+        </a>
+      </div>
+    </div>
+
+    <div id="tab-games" class="tab-panel">
+      <div class="games-grid">
+        <div class="game-tile g1" style="background-image: url('https://i.pinimg.com/736x/98/42/6d/98426d69c4e07e8a38107661e4c2d1ab.jpg'); background-size: cover; background-position: center;"><span class="g-label" style="background: rgba(0,0,0,0.35); padding: 4px 8px; border-radius: 8px;">HSR<span class="g-main">main: Blade</span></span></div>
+        <div class="game-tile g2" style="background-image: url('https://i.pinimg.com/736x/76/4b/85/764b8568647ae570fbd88eb302528cd4.jpg'); background-size: cover; background-position: center;"><span class="g-label" style="background: rgba(0,0,0,0.35); padding: 4px 8px; border-radius: 8px;">Genshin<span class="g-main">main: Wriothesley</span></span></div>
+        <div class="game-tile g3" style="background-image: url('https://i.pinimg.com/736x/cb/6a/f8/cb6af82c7fec9e6389bc62b496cdc64e.jpg'); background-size: cover; background-position: center;"><span class="g-label" style="background: rgba(0,0,0,0.35); padding: 4px 8px; border-radius: 8px;">HI3<span class="g-main">main: Elysia</span></span></div>
+        <div class="game-tile g4" style="background-image: url('https://i.pinimg.com/736x/20/27/1f/20271f2ce28151d7fe74da4e1653d75b.jpg'); background-size: cover; background-position: center;"><span class="g-label" style="background: rgba(0,0,0,0.35); padding: 4px 8px; border-radius: 8px;">NTE<span class="g-main">main: Zankou</span></span></div>
+        <div class="game-tile g5" style="background-image: url('https://i.pinimg.com/736x/41/e8/0a/41e80a9fe34f5917b9a96d818a620f9f.jpg'); background-size: cover; background-position: center;"><span class="g-label" style="background: rgba(0,0,0,0.35); padding: 4px 8px; border-radius: 8px;">WuWa<span class="g-main">main: Hsin</span></span></div>
+        <div class="game-tile g6" style="background-image: url('https://i.pinimg.com/736x/15/dc/73/15dc730db7a577059ed16c720bf6f489.jpg'); background-size: cover; background-position: center;"><span class="g-label" style="background: rgba(0,0,0,0.35); padding: 4px 8px; border-radius: 8px;">MLBB<span class="g-main">main: Eudora</span></span></div>
+        <div class="game-tile g7" style="background-image: url('https://i.pinimg.com/736x/4e/e5/2e/4ee52e80a347549a8af8ecba46eec648.jpg'); background-size: cover; background-position: center;"><span class="g-label" style="background: rgba(0,0,0,0.35); padding: 4px 8px; border-radius: 8px;">CODM<span class="g-main">main: Kreuger</span></span></div>
+        <div class="game-tile g8" style="background-image: url('https://i.pinimg.com/736x/82/67/4e/82674e7da51604aea9d57cc6220400d1.jpg'); background-size: cover; background-position: center;"><span class="g-label" style="background: rgba(0,0,0,0.35); padding: 4px 8px; border-radius: 8px;">ZZZ<span class="g-main">main: Remielle</span></span></div>
+      </div>
+    </div>
+
+    <div class="footer-note">✦ this website is updated constantly, and this website is independently owned by me! thanks for stopping by :3 ✦</div>
+
+    <div class="reactions">
+      <button class="reaction-btn" onclick="react('😄', this)">😄<span class="reaction-count" id="count-happy">0</span></button>
+      <button class="reaction-btn" onclick="react('🔥', this)">🔥<span class="reaction-count" id="count-fire">0</span></button>
+      <button class="reaction-btn" onclick="react('💙', this)">💙<span class="reaction-count" id="count-heart">0</span></button>
+      <button class="reaction-btn" onclick="react('😭', this)">😭<span class="reaction-count" id="count-cry">0</span></button>
+    </div>
+
+    <button class="vibe-btn" onclick="rollVibe()">🎲 Roll my vibe</button>
+    <button class="compliment-btn" onclick="getCompliment()">💌 Get a compliment</button>
+    <div class="vibe-toast" id="vibeToast"></div>
+  </div>
+
+  <script>
+    // Facebook/Meta in-app browsers can be stricter than Safari/Chrome.
+    // Keep the page usable even when WebView blocks autoplay or heavy effects.
+    (function () {
+      const ua = navigator.userAgent || '';
+      const platform = navigator.platform || '';
+      const isMeta = /FBAN|FBAV|Instagram|Messenger/i.test(ua);
+      const isIOS = /iPhone|iPad|iPod/i.test(ua) || (platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      if (isMeta) document.documentElement.classList.add('meta-webview');
+      if (isIOS) document.documentElement.classList.add('ios-device');
+    })();
+
+    // Safe localStorage access: some privacy modes / embedded browsers can deny it.
+    function safeGet(key) {
+      try { return window.safeGet(key); } catch (e) { return null; }
+    }
+    function safeSet(key, value) {
+      try { window.safeSet(key, value); } catch (e) {}
+    }
+
+    function showTab(tab, btn) {
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-' + tab).classList.add('active');
+      btn.classList.add('active');
+      if (tab === 'games') {
+        showAchievement('games-explorer', 'checked out the games tab');
+      }
+    }
+
+    // sparkle burst when avatar is clicked/tapped
+    function burstSparkles(e) {
+      const emojis = ['✦', '✨', '💙', '💛', '⭐'];
+      const rect = e.currentTarget.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+      for (let i = 0; i < 10; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'burst-piece';
+        piece.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        const angle = (Math.PI * 2 * i) / 10 + Math.random() * 0.5;
+        const dist = 60 + Math.random() * 50;
+        piece.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+        piece.style.setProperty('--dy', Math.sin(angle) * dist + 'px');
+        piece.style.left = cx + 'px';
+        piece.style.top = cy + 'px';
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), 900);
+      }
+    }
+
+    // gentle floating background sparkles
+    function spawnBgSparkle() {
+      const s = document.createElement('div');
+      s.className = 'bg-sparkle';
+      s.textContent = Math.random() > 0.5 ? '✦' : '✧';
+      s.style.left = Math.random() * 100 + 'vw';
+      s.style.bottom = '-20px';
+      const duration = 8 + Math.random() * 6;
+      s.style.animationDuration = duration + 's';
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), duration * 1000);
+    }
+    setInterval(spawnBgSparkle, 1400);
+
+    // typewriter effect for tagline
+    const taglineText = "future lawyer in training ⚖️ ✦";
+    const taglineEl = document.getElementById('tagline');
+    let ti = 0;
+    function typeTagline() {
+      if (ti <= taglineText.length) {
+        taglineEl.innerHTML = taglineText.slice(0, ti) + '<span class="cursor-blink">&nbsp;</span>';
+        ti++;
+        setTimeout(typeTagline, 55);
+      } else {
+        taglineEl.innerHTML = taglineText;
+      }
+    }
+    typeTagline();
+
+    // 3D tilt on avatar hover
+    const avatarWrap = document.querySelector('.avatar-wrap');
+    avatarWrap.addEventListener('mousemove', (e) => {
+      const rect = avatarWrap.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      const rotateX = (-y / rect.height) * 18;
+      const rotateY = (x / rect.width) * 18;
+      avatarWrap.style.transform = `perspective(400px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    });
+    avatarWrap.addEventListener('mouseleave', () => {
+      avatarWrap.style.transform = 'perspective(400px) rotateX(0) rotateY(0)';
+    });
+
+    // cursor sparkle trail (desktop only, throttled)
+    let lastSparkle = 0;
+    document.addEventListener('mousemove', (e) => {
+      const now = Date.now();
+      if (now - lastSparkle < 90) return;
+      lastSparkle = now;
+      const s = document.createElement('div');
+      s.className = 'cursor-sparkle';
+      s.textContent = ['✦','✧','·'][Math.floor(Math.random()*3)];
+      s.style.left = e.clientX + 'px';
+      s.style.top = e.clientY + 'px';
+      document.body.appendChild(s);
+      setTimeout(() => s.remove(), 700);
+    });
+
+    // confetti moment on page load
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        const rect = document.querySelector('.card').getBoundingClientRect();
+        const fakeEvent = { currentTarget: { getBoundingClientRect: () => ({ left: rect.left, top: rect.top, width: rect.width, height: 60 }) } };
+        burstSparkles(fakeEvent);
+      }, 400);
+    });
+
+    // tiny generated click sound (no audio files needed)
+    function playClick(freq) {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.value = freq || 700;
+        gain.gain.setValueAtTime(0.08, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.2);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.2);
+      } catch (e) {}
+    }
+
+    // tagline cycles through different lines on click
+    const taglines = [
+      "future lawyer in training ⚖️ ✦",
+      "badminton court to courtroom 🏸",
+      "current mood: grinding gacha ✨",
+      "swimming, jogging, gymming, repeat 💪",
+      "k-pop on shuffle 24/7 🎧"
+    ];
+    let taglineIndex = 0;
+    document.getElementById('tagline').addEventListener('click', () => {
+      taglineIndex = (taglineIndex + 1) % taglines.length;
+      ti = 0;
+      const el = document.getElementById('tagline');
+      function retype() {
+        if (ti <= taglines[taglineIndex].length) {
+          el.innerHTML = taglines[taglineIndex].slice(0, ti) + '<span class="cursor-blink">&nbsp;</span>';
+          ti++;
+          setTimeout(retype, 45);
+        } else {
+          el.innerHTML = taglines[taglineIndex];
+        }
+      }
+      retype();
+      playClick(600);
+    });
+
+    // confetti burst on social link click
+    function socialClick(e) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const fakeEvent = { currentTarget: { getBoundingClientRect: () => rect } };
+      burstSparkles(fakeEvent);
+      playClick(800);
+    }
+
+    // avatar click counter -> hidden achievement
+    let avatarClicks = 0;
+    document.querySelector('.avatar-wrap').addEventListener('click', () => {
+      avatarClicks++;
+      playClick(900);
+      if (avatarClicks === 7) {
+        showAchievement('avatar-tapper', 'certified avatar-tapper');
+      }
+    });
+
+    // achievement / secret system
+    const ALL_ACHIEVEMENTS = [
+      'avatar-tapper','vibe-roller','konami','compliment-collector',
+      'reaction-giver','rainbow-finder','games-explorer','verse-reader'
+    ];
+    const SECRET_NAMES = {
+      'avatar-tapper': 'Tap the avatar 7 times',
+      'vibe-roller': 'Roll your first vibe',
+      'konami': 'Enter the Konami code',
+      'compliment-collector': 'Get your first compliment',
+      'reaction-giver': 'Leave your first reaction',
+      'rainbow-finder': 'Long-press the avatar',
+      'games-explorer': 'Open the games tab',
+      'verse-reader': 'Read your first Bible verse'
+    };
+    let achievementTimer = null;
+    function showAchievement(key, text) {
+      if (!ALL_ACHIEVEMENTS.includes(key)) return;
+      const storeKey = 'lukkas_ach_' + key;
+      const isNew = !safeGet(storeKey);
+      const ach = document.getElementById('achievement');
+      ach.textContent = (isNew ? '✨ NEW! ' : '🔁 ') + text;
+      ach.classList.add('show');
+      if (achievementTimer) clearTimeout(achievementTimer);
+      achievementTimer = setTimeout(() => ach.classList.remove('show'), 3000);
+      safeSet(storeKey, '1');
+      updateAchieveBadge();
+    }
+    function updateAchieveBadge() {
+      const unlocked = ALL_ACHIEVEMENTS.filter(k => safeGet('lukkas_ach_' + k)).length;
+      document.getElementById('achieveBadge').textContent = unlocked + '/' + ALL_ACHIEVEMENTS.length + ' secrets found';
+      renderSecrets();
+    }
+    function renderSecrets() {
+      const panel = document.getElementById('secretPanel');
+      if (!panel) return;
+      panel.innerHTML = ALL_ACHIEVEMENTS.map((key, i) => {
+        const unlocked = !!safeGet('lukkas_ach_' + key);
+        return '<div class="secret-item ' + (unlocked ? '' : 'locked') + '">' +
+          '<span>' + (unlocked ? '🔓' : '🔒') + '</span><span>' +
+          (unlocked ? SECRET_NAMES[key] : 'Secret #' + (i + 1) + ' — keep exploring') +
+          '</span></div>';
+      }).join('');
+    }
+    function toggleSecrets() {
+      const panel = document.getElementById('secretPanel');
+      panel.classList.toggle('show');
+      renderSecrets();
+    }
+    updateAchieveBadge();
+
+    // vibe roll button
+    const vibes = [
+      "vibe check: passed ✅",
+      "energy: unstoppable badminton serve 🏸",
+      "current status: main character energy ✨",
+      "today's forecast: 100% chance of gacha pulls 🎰",
+      "mood: k-pop playlist on repeat 🎧",
+      "vibe: future lawyer, present gamer ⚖️🎮",
+      "status: hydrated & motivated 💧"
+    ];
+    function rollVibe() {
+      const pick = vibes[Math.floor(Math.random() * vibes.length)];
+      document.getElementById('vibeToast').textContent = pick;
+      playClick(750);
+      if (!safeGet('lukkas_ach_vibe-roller')) {
+        showAchievement('vibe-roller', 'rolled your first vibe check');
+      }
+    }
+
+    // konami code easter egg
+    const konamiSeq = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+    let konamiProgress = 0;
+    document.addEventListener('keydown', (e) => {
+      const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+      if (key === konamiSeq[konamiProgress]) {
+        konamiProgress++;
+        if (konamiProgress === konamiSeq.length) {
+          konamiProgress = 0;
+          confettiRain();
+          showAchievement('konami', 'you found the konami code 🕹️');
+        }
+      } else {
+        konamiProgress = (key === konamiSeq[0]) ? 1 : 0;
+      }
+    });
+
+    function confettiRain() {
+      const emojis = ['✦','✨','💙','💛','⭐','🎉'];
+      for (let i = 0; i < 60; i++) {
+        setTimeout(() => {
+          const piece = document.createElement('div');
+          piece.className = 'bg-sparkle';
+          piece.style.position = 'fixed';
+          piece.style.left = Math.random() * 100 + 'vw';
+          piece.style.top = '-20px';
+          piece.style.fontSize = (14 + Math.random() * 10) + 'px';
+          piece.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+          piece.style.animation = 'floatDown 2.5s linear forwards';
+          document.body.appendChild(piece);
+          setTimeout(() => piece.remove(), 2500);
+        }, i * 30);
+      }
+    }
+
+    // time-based greeting
+    (function setGreeting() {
+      const h = new Date().getHours();
+      let text = 'Good Evening, Traveller.';
+      if (h < 5) text = 'Burning the Midnight Oil, Traveller.';
+      else if (h < 12) text = 'Good Morning, Traveller.';
+      else if (h < 18) text = 'Good Afternoon, Traveller.';
+      document.getElementById('greeting').textContent = text;
+    })();
+
+    // live clock, updates every second
+    function updateClock() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, '0');
+      const m = String(now.getMinutes()).padStart(2, '0');
+      const s = String(now.getSeconds()).padStart(2, '0');
+      document.getElementById('liveClock').textContent = `🕐 ${h}:${m}:${s}`;
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // Card hover / tilt (desktop pointer devices only)
+    const cardEl = document.querySelector('.card');
+    cardEl.addEventListener('mousemove', (e) => {
+      const rect = cardEl.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      const rotateX = (-y / rect.height) * 3;
+      const rotateY = (x / rect.width) * 3;
+      cardEl.style.transform = `perspective(900px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+    });
+    cardEl.addEventListener('mouseleave', () => {
+      cardEl.style.transform = 'perspective(900px) rotateX(0) rotateY(0)';
+    });
+
+    // double-click anywhere on the card for a heart burst
+    cardEl.addEventListener('dblclick', (e) => {
+      const fakeEvent = { currentTarget: { getBoundingClientRect: () => ({ left: e.clientX, top: e.clientY, width: 0, height: 0 }) } };
+      burstSparkles(fakeEvent);
+      playClick(1100);
+    });
+
+    // click ripple on empty background (outside the card)
+    document.body.addEventListener('click', (e) => {
+      if (e.target === document.body) {
+        const r = document.createElement('div');
+        r.className = 'ripple';
+        r.style.left = e.clientX + 'px';
+        r.style.top = e.clientY + 'px';
+        document.body.appendChild(r);
+        setTimeout(() => r.remove(), 800);
+      }
+    });
+
+    // emoji reaction bar (counts saved per browser)
+    const reactionKeys = { '😄': 'happy', '🔥': 'fire', '💙': 'heart', '😭': 'cry' };
+    function loadReactionCounts() {
+      Object.entries(reactionKeys).forEach(([emoji, key]) => {
+        const count = safeGet('lukkas_react_' + key) || '0';
+        document.getElementById('count-' + key).textContent = count;
+      });
+    }
+    function react(emoji, btn) {
+      const key = reactionKeys[emoji];
+      const newCount = parseInt(safeGet('lukkas_react_' + key) || '0', 10) + 1;
+      safeSet('lukkas_react_' + key, newCount);
+      document.getElementById('count-' + key).textContent = newCount;
+      playClick(850);
+      const rect = btn.getBoundingClientRect();
+      const floater = document.createElement('div');
+      floater.className = 'float-emoji';
+      floater.textContent = emoji;
+      floater.style.left = (rect.left + rect.width / 2 - 10) + 'px';
+      floater.style.top = rect.top + 'px';
+      document.body.appendChild(floater);
+      setTimeout(() => floater.remove(), 1000);
+      if (!safeGet('lukkas_ach_reaction-giver')) {
+        showAchievement('reaction-giver', 'left your first reaction');
+      }
+    }
+    loadReactionCounts();
+
+    // compliment generator button
+    const compliments = [
+      "you're doing better than you think 💛",
+      "that badminton serve? unstoppable 🏸",
+      "future lawyer, present legend ⚖️✨",
+      "your playlist has great taste, no cap 🎧",
+      "main character energy detected 🌟",
+      "you showed up today, and that counts 💙",
+      "feelin' smart? clock that 🎓"
+    ];
+    function getCompliment() {
+      const pick = compliments[Math.floor(Math.random() * compliments.length)];
+      document.getElementById('vibeToast').textContent = pick;
+      playClick(950);
+      if (!safeGet('lukkas_ach_compliment-collector')) {
+        showAchievement('compliment-collector', 'collected your first compliment');
+      }
+    }
+
+    // long-press avatar for a hidden rainbow charge effect
+    let pressTimer;
+    const avatarWrapEl = document.getElementById('avatarWrap');
+    avatarWrapEl.addEventListener('mousedown', () => {
+      pressTimer = setTimeout(() => {
+        avatarWrapEl.classList.add('rainbow-charge');
+        playClick(1200);
+        showAchievement('rainbow-finder', 'found the secret rainbow charge');
+        setTimeout(() => avatarWrapEl.classList.remove('rainbow-charge'), 1200);
+      }, 650);
+    });
+    avatarWrapEl.addEventListener('mouseup', () => clearTimeout(pressTimer));
+    avatarWrapEl.addEventListener('mouseleave', () => clearTimeout(pressTimer));
+    avatarWrapEl.addEventListener('touchstart', () => {
+      pressTimer = setTimeout(() => {
+        avatarWrapEl.classList.add('rainbow-charge');
+        playClick(1200);
+        showAchievement('rainbow-finder', 'found the secret rainbow charge');
+        setTimeout(() => avatarWrapEl.classList.remove('rainbow-charge'), 1200);
+      }, 650);
+    });
+    avatarWrapEl.addEventListener('touchend', () => clearTimeout(pressTimer));
+
+    // ---------- BIBLE VERSE BUTTON ----------
+    const bibleVerses = [
+      { ref: "John 3:16", text: "For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life." },
+      { ref: "Psalm 23:1", text: "The LORD is my shepherd; I shall not want." },
+      { ref: "Philippians 4:13", text: "I can do all things through Christ which strengtheneth me." },
+      { ref: "Jeremiah 29:11", text: "For I know the thoughts that I think toward you, saith the LORD, thoughts of peace, and not of evil, to give you an expected end." },
+      { ref: "Romans 8:28", text: "And we know that all things work together for good to them that love God, to them who are the called according to his purpose." },
+      { ref: "Proverbs 3:5-6", text: "Trust in the LORD with all thine heart; and lean not unto thine own understanding. In all thy ways acknowledge him, and he shall direct thy paths." },
+      { ref: "Joshua 1:9", text: "Have not I commanded thee? Be strong and of a good courage; be not afraid, neither be thou dismayed: for the LORD thy God is with thee whithersoever thou goest." },
+      { ref: "Isaiah 41:10", text: "Fear thou not; for I am with thee: be not dismayed; for I am thy God: I will strengthen thee; yea, I will help thee." },
+      { ref: "Psalm 46:1", text: "God is our refuge and strength, a very present help in trouble." },
+      { ref: "Matthew 11:28", text: "Come unto me, all ye that labour and are heavy laden, and I will give you rest." },
+      { ref: "Romans 12:2", text: "And be not conformed to this world: but be ye transformed by the renewing of your mind." },
+      { ref: "Psalm 119:105", text: "Thy word is a lamp unto my feet, and a light unto my path." },
+      { ref: "Galatians 5:22-23", text: "But the fruit of the Spirit is love, joy, peace, longsuffering, gentleness, goodness, faith, meekness, temperance: against such there is no law." },
+      { ref: "2 Timothy 1:7", text: "For God hath not given us the spirit of fear; but of power, and of love, and of a sound mind." },
+      { ref: "Psalm 34:18", text: "The LORD is nigh unto them that are of a broken heart; and saveth such as be of a contrite spirit." },
+      { ref: "Proverbs 16:3", text: "Commit thy works unto the LORD, and thy thoughts shall be established." },
+      { ref: "Matthew 6:33", text: "But seek ye first the kingdom of God, and his righteousness; and all these things shall be added unto you." },
+      { ref: "1 Corinthians 13:4-5", text: "Charity suffereth long, and is kind; charity envieth not; charity vaunteth not itself, is not puffed up." },
+      { ref: "Psalm 118:24", text: "This is the day which the LORD hath made; we will rejoice and be glad in it." },
+      { ref: "Isaiah 40:31", text: "But they that wait upon the LORD shall renew their strength; they shall mount up with wings as eagles." },
+      { ref: "Deuteronomy 31:6", text: "Be strong and of a good courage, fear not, nor be afraid of them: for the LORD thy God, he it is that doth go with thee." },
+      { ref: "Psalm 27:1", text: "The LORD is my light and my salvation; whom shall I fear? the LORD is the strength of my life; of whom shall I be afraid?" },
+      { ref: "Ephesians 2:8-9", text: "For by grace are ye saved through faith; and that not of yourselves: it is the gift of God: Not of works, lest any man should boast." },
+      { ref: "Romans 5:8", text: "But God commendeth his love toward us, in that, while we were yet sinners, Christ died for us." },
+      { ref: "Psalm 121:1-2", text: "I will lift up mine eyes unto the hills, from whence cometh my help. My help cometh from the LORD, which made heaven and earth." },
+      { ref: "Matthew 5:14", text: "Ye are the light of the world. A city that is set on an hill cannot be hid." },
+      { ref: "Hebrews 11:1", text: "Now faith is the substance of things hoped for, the evidence of things not seen." },
+      { ref: "1 Peter 5:7", text: "Casting all your care upon him; for he careth for you." },
+      { ref: "Psalm 37:4", text: "Delight thyself also in the LORD; and he shall give thee the desires of thine heart." },
+      { ref: "John 14:27", text: "Peace I leave with you, my peace I give unto you: not as the world giveth, give I unto you. Let not your heart be troubled, neither let it be afraid." },
+      { ref: "Colossians 3:23", text: "And whatsoever ye do, do it heartily, as to the Lord, and not unto men." },
+      { ref: "Psalm 139:14", text: "I will praise thee; for I am fearfully and wonderfully made: marvellous are thy works." },
+      { ref: "Romans 15:13", text: "Now the God of hope fill you with all joy and peace in believing, that ye may abound in hope, through the power of the Holy Ghost." },
+      { ref: "Proverbs 18:10", text: "The name of the LORD is a strong tower: the righteous runneth into it, and is safe." },
+      { ref: "James 1:2-3", text: "My brethren, count it all joy when ye fall into divers temptations; Knowing this, that the trying of your faith worketh patience." },
+      { ref: "Psalm 91:1-2", text: "He that dwelleth in the secret place of the most High shall abide under the shadow of the Almighty." },
+      { ref: "1 John 4:19", text: "We love him, because he first loved us." },
+      { ref: "Galatians 6:9", text: "And let us not be weary in well doing: for in due season we shall reap, if we faint not." },
+      { ref: "Matthew 19:26", text: "But Jesus beheld them, and said unto them, With men this is impossible; but with God all things are possible." },
+      { ref: "Psalm 56:3", text: "What time I am afraid, I will trust in thee." },
+      { ref: "Nahum 1:7", text: "The LORD is good, a strong hold in the day of trouble; and he knoweth them that trust in him." },
+      { ref: "2 Corinthians 5:17", text: "Therefore if any man be in Christ, he is a new creature: old things are passed away; behold, all things are become new." },
+      { ref: "Psalm 16:11", text: "Thou wilt shew me the path of life: in thy presence is fulness of joy; at thy right hand there are pleasures for evermore." },
+      { ref: "Proverbs 4:23", text: "Keep thy heart with all diligence; for out of it are the issues of life." },
+      { ref: "Isaiah 26:3", text: "Thou wilt keep him in perfect peace, whose mind is stayed on thee: because he trusteth in thee." },
+      { ref: "Psalm 55:22", text: "Cast thy burden upon the LORD, and he shall sustain thee: he shall never suffer the righteous to be moved." },
+      { ref: "1 Thessalonians 5:16-18", text: "Rejoice evermore. Pray without ceasing. In every thing give thanks: for this is the will of God in Christ Jesus concerning you." },
+      { ref: "Matthew 7:7", text: "Ask, and it shall be given you; seek, and ye shall find; knock, and it shall be opened unto you." },
+      { ref: "Psalm 73:26", text: "My flesh and my heart faileth: but God is the strength of my heart, and my portion for ever." },
+      { ref: "Romans 10:9", text: "That if thou shalt confess with thy mouth the Lord Jesus, and shalt believe in thine heart that God hath raised him from the dead, thou shalt be saved." },
+      { ref: "Proverbs 22:6", text: "Train up a child in the way he should go: and when he is old, he will not depart from it." },
+      { ref: "Psalm 30:5", text: "Weeping may endure for a night, but joy cometh in the morning." },
+      { ref: "Ecclesiastes 3:1", text: "To every thing there is a season, and a time to every purpose under the heaven." },
+      { ref: "Micah 6:8", text: "He hath shewed thee, O man, what is good; and what doth the LORD require of thee, but to do justly, and to love mercy, and to walk humbly with thy God?" },
+      { ref: "Psalm 62:1", text: "Truly my soul waiteth upon God: from him cometh my salvation." },
+      { ref: "1 Corinthians 10:13", text: "There hath no temptation taken you but such as is common to man: but God is faithful, who will not suffer you to be tempted above that ye are able." },
+      { ref: "Psalm 46:10", text: "Be still, and know that I am God: I will be exalted among the heathen, I will be exalted in the earth." },
+      { ref: "John 16:33", text: "These things I have spoken unto you, that in me ye might have peace. In the world ye shall have tribulation: but be of good cheer; I have overcome the world." },
+      { ref: "Proverbs 17:22", text: "A merry heart doeth good like a medicine: but a broken spirit drieth the bones." },
+      { ref: "Psalm 100:4-5", text: "Enter into his gates with thanksgiving, and into his courts with praise: be thankful unto him, and bless his name. For the LORD is good; his mercy is everlasting." },
+      { ref: "Hebrews 13:5", text: "I will never leave thee, nor forsake thee." },
+      { ref: "Matthew 6:34", text: "Take therefore no thought for the morrow: for the morrow shall take thought for the things of itself. Sufficient unto the day is the evil thereof." },
+      { ref: "Psalm 34:8", text: "O taste and see that the LORD is good: blessed is the man that trusteth in him." },
+      { ref: "1 Corinthians 16:14", text: "Let all your things be done with charity." },
+      { ref: "Proverbs 27:17", text: "Iron sharpeneth iron; so a man sharpeneth the countenance of his friend." },
+      { ref: "Psalm 32:8", text: "I will instruct thee and teach thee in the way which thou shalt go: I will guide thee with mine eye." },
+      { ref: "Colossians 3:2", text: "Set your affection on things above, not on things on the earth." },
+      { ref: "Psalm 143:8", text: "Cause me to hear thy lovingkindness in the morning; for in thee do I trust: cause me to know the way wherein I should walk." },
+      { ref: "James 4:8", text: "Draw nigh to God, and he will draw nigh to you." },
+      { ref: "1 John 1:9", text: "If we confess our sins, he is faithful and just to forgive us our sins, and to cleanse us from all unrighteousness." },
+      { ref: "Psalm 90:12", text: "So teach us to number our days, that we may apply our hearts unto wisdom." },
+      { ref: "Matthew 5:16", text: "Let your light so shine before men, that they may see your good works, and glorify your Father which is in heaven." },
+      { ref: "Proverbs 15:1", text: "A soft answer turneth away wrath: but grievous words stir up anger." },
+      { ref: "Psalm 25:4-5", text: "Shew me thy ways, O LORD; teach me thy paths. Lead me in thy truth, and teach me: for thou art the God of my salvation." },
+      { ref: "Galatians 2:20", text: "I am crucified with Christ: nevertheless I live; yet not I, but Christ liveth in me." },
+      { ref: "Psalm 103:2-3", text: "Bless the LORD, O my soul, and forget not all his benefits: Who forgiveth all thine iniquities; who healeth all thy diseases." },
+      { ref: "Proverbs 31:25", text: "Strength and honour are her clothing; and she shall rejoice in time to come." },
+      { ref: "2 Corinthians 12:9", text: "My grace is sufficient for thee: for my strength is made perfect in weakness." },
+      { ref: "Psalm 18:2", text: "The LORD is my rock, and my fortress, and my deliverer; my God, my strength, in whom I will trust." },
+      { ref: "Ephesians 4:32", text: "And be ye kind one to another, tenderhearted, forgiving one another, even as God for Christ's sake hath forgiven you." },
+      { ref: "Psalm 84:11", text: "For the LORD God is a sun and shield: the LORD will give grace and glory: no good thing will he withhold from them that walk uprightly." },
+      { ref: "Proverbs 1:7", text: "The fear of the LORD is the beginning of knowledge: but fools despise wisdom and instruction." },
+      { ref: "Matthew 18:20", text: "For where two or three are gathered together in my name, there am I in the midst of them." },
+      { ref: "Psalm 138:3", text: "In the day when I cried thou answeredst me, and strengthenedst me with strength in my soul." },
+      { ref: "1 Peter 3:15", text: "But sanctify the Lord God in your hearts: and be ready always to give an answer to every man that asketh you a reason of the hope that is in you." },
+      { ref: "Psalm 5:3", text: "My voice shalt thou hear in the morning, O LORD; in the morning will I direct my prayer unto thee, and will look up." },
+      { ref: "Romans 8:1", text: "There is therefore now no condemnation to them which are in Christ Jesus, who walk not after the flesh, but after the Spirit." },
+      { ref: "Proverbs 19:21", text: "There are many devices in a man's heart; nevertheless the counsel of the LORD, that shall stand." },
+      { ref: "Psalm 147:3", text: "He healeth the broken in heart, and bindeth up their wounds." },
+      { ref: "James 1:17", text: "Every good gift and every perfect gift is from above, and cometh down from the Father of lights." },
+      { ref: "Psalm 20:7", text: "Some trust in chariots, and some in horses: but we will remember the name of the LORD our God." },
+      { ref: "Matthew 28:20", text: "Lo, I am with you alway, even unto the end of the world." },
+      { ref: "Proverbs 10:9", text: "He that walketh uprightly walketh surely: but he that perverteth his ways shall be known." },
+      { ref: "Psalm 133:1", text: "Behold, how good and how pleasant it is for brethren to dwell together in unity!" },
+      { ref: "1 Corinthians 15:58", text: "Therefore, my beloved brethren, be ye stedfast, unmoveable, always abounding in the work of the Lord, forasmuch as ye know that your labour is not in vain in the Lord." },
+      { ref: "Psalm 4:8", text: "I will both lay me down in peace, and sleep: for thou, LORD, only makest me dwell in safety." },
+      { ref: "Proverbs 11:25", text: "The liberal soul shall be made fat: and he that watereth shall be watered also himself." },
+      { ref: "Zephaniah 3:17", text: "The LORD thy God in the midst of thee is mighty; he will save, he will rejoice over thee with joy; he will rest in his love, he will joy over thee with singing." },
+      { ref: "Psalm 71:5", text: "For thou art my hope, O Lord GOD: thou art my trust from my youth." },
+      { ref: "2 Timothy 4:7", text: "I have fought a good fight, I have finished my course, I have kept the faith." },
+      { ref: "Psalm 42:11", text: "Why art thou cast down, O my soul? and why art thou disquieted within me? hope thou in God: for I shall yet praise him." },
+      { ref: "Proverbs 29:25", text: "The fear of man bringeth a snare: but whoso putteth his trust in the LORD shall be safe." },
+      { ref: "Lamentations 3:22-23", text: "It is of the LORD's mercies that we are not consumed, because his compassions fail not. They are new every morning: great is thy faithfulness." }
+    ];
+    function showVerse() {
+      const pick = bibleVerses[Math.floor(Math.random() * bibleVerses.length)];
+      const el = document.getElementById('bibleVerse');
+      el.innerHTML = '"' + pick.text + '"<span class="verse-ref">' + pick.ref + '</span>';
+      el.classList.add('show');
+      playClick(900);
+      if (!safeGet('lukkas_ach_verse-reader')) {
+        showAchievement('verse-reader', 'read your first verse');
+      }
+    }
+  </script>
+
+  <!-- ---------- MUSIC CONTROL ---------- -->
+  <button id="musicOpen" class="music-open" aria-label="Open music controls" aria-expanded="false">
+    ♪
+  </button>
+
+  <div id="musicPanel" class="music-panel" aria-hidden="true">
+    <div class="music-panel-head">
+      <span>♪</span>
+      <button id="musicClose" class="music-close" aria-label="Close music controls">×</button>
+    </div>
+
+    <button id="musicToggle" class="music-main-btn" aria-label="Play or pause music">▶</button>
+
+    <div id="trackName" class="track-name">aespa — Supernova (Instrumental)</div>
+
+    <div class="music-track-list">
+      <button class="trackBtn active" data-track="supernova">✦ Supernova</button>
+      <button class="trackBtn" data-track="armageddon">⚡ Armageddon</button>
+      <button class="trackBtn" data-track="whiplash">✦ Whiplash</button>
+      <button class="trackBtn" data-track="lemonade">🍋 LEMONADE</button>
+    </div>
+
+    <div class="volume-title">Volume</div>
+    <input id="musicVolume" class="volume-slider" aria-label="Music volume" type="range" min="0" max="100" value="50">
+
+    <button id="musicMute" class="mute-btn" aria-pressed="false">🔊 Mute</button>
+  </div>
+
+  <audio id="bgMusic" loop preload="metadata" playsinline></audio>
+
+  <script>
+    const tracks = {
+      supernova: {
+        name: "aespa — Supernova (Instrumental)",
+        url: "https://file.garden/aqtBi-Lyx_Xl-djC/aespa%20%EC%97%90%EC%8A%A4%ED%8C%8C%20'Supernova'%20(Official%20Instrumental).mp3"
+      },
+      armageddon: {
+        name: "aespa — Armageddon (Instrumental)",
+        url: "https://file.garden/aqtBi-Lyx_Xl-djC/aespa%20%EC%97%90%EC%8A%A4%ED%8C%8C%20'Armageddon'%20(Official%20Instrumental)%20%5BoljFUwjeXdI%5D.mp3"
+      },
+      whiplash: {
+        name: "aespa — Whiplash (Instrumental)",
+        url: "https://file.garden/aqtBi-Lyx_Xl-djC/aespa%20%EC%97%90%EC%8A%A4%ED%8C%8C%20'Whiplash'%20(Official%20Instrumental)%20%5BtBf8eZVTPRU%5D.mp3"
+      },
+      lemonade: {
+        name: "LEMONADE — Instrumental",
+        url: "https://file.garden/aqtBi-Lyx_Xl-djC/LEMONADE%20(Instrumental)%20%5BoVv0k1txQLQ%5D.mp3"
+      }
+    };
+
+    let currentTrack = "supernova";
+
+    const audio = document.getElementById("bgMusic");
+    const musicOpen = document.getElementById("musicOpen");
+    const musicPanel = document.getElementById("musicPanel");
+    const musicClose = document.getElementById("musicClose");
+    const musicToggle = document.getElementById("musicToggle");
+    const musicMute = document.getElementById("musicMute");
+    const musicVolume = document.getElementById("musicVolume");
+    const trackName = document.getElementById("trackName");
+
+    audio.volume = 0.5;
+
+    function updatePlayButton() {
+      musicToggle.textContent = audio.paused ? "▶" : "❚❚";
+      musicToggle.setAttribute("aria-label", audio.paused ? "Play music" : "Pause music");
+    }
+
+    function updateMuteButton() {
+      const muted = audio.muted || audio.volume === 0;
+      musicMute.textContent = muted ? "🔇 Unmute" : "🔊 Mute";
+      musicMute.setAttribute("aria-pressed", muted ? "true" : "false");
+    }
+
+    function setTrack(key, playNow = true) {
+      const track = tracks[key];
+      if (!track) return;
+
+      currentTrack = key;
+      audio.src = track.url;
+      audio.load();
+      trackName.textContent = track.name;
+
+      document.querySelectorAll(".trackBtn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.track === key);
+      });
+
+      if (playNow) {
+        audio.play().catch(() => {});
+      }
+      updatePlayButton();
+    }
+
+    musicOpen.addEventListener("click", () => {
+      const open = musicPanel.classList.toggle("open");
+      musicPanel.setAttribute("aria-hidden", open ? "false" : "true");
+      musicOpen.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+
+    musicClose.addEventListener("click", () => {
+      musicPanel.classList.remove("open");
+      musicPanel.setAttribute("aria-hidden", "true");
+      musicOpen.setAttribute("aria-expanded", "false");
+    });
+
+    musicToggle.addEventListener("click", () => {
+      if (audio.paused) {
+        audio.play().catch(() => {});
+      } else {
+        audio.pause();
+      }
+    });
+
+    musicMute.addEventListener("click", () => {
+      audio.muted = !audio.muted;
+      updateMuteButton();
+    });
+
+    musicVolume.addEventListener("input", (e) => {
+      audio.volume = Number(e.target.value) / 100;
+      if (audio.volume > 0) audio.muted = false;
+      updateMuteButton();
+    });
+
+    document.querySelectorAll(".trackBtn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        setTrack(btn.dataset.track, true);
+      });
+    });
+
+    audio.addEventListener("play", updatePlayButton);
+    audio.addEventListener("pause", updatePlayButton);
+    audio.addEventListener("volumechange", updateMuteButton);
+
+    setTrack("supernova", false);
+
+    // Desktop browsers may allow audible autoplay. iPhone/iPad and embedded WebViews
+    // commonly require a real user gesture, so the first touch/click starts music there.
+    const isIOSDevice = document.documentElement.classList.contains('ios-device');
+    const isMetaWebView = document.documentElement.classList.contains('meta-webview');
+    let musicActivated = false;
+
+    function startMusic() {
+      if (musicActivated && !audio.paused) return;
+      audio.play().then(() => {
+        musicActivated = true;
+        updatePlayButton();
+      }).catch(() => {
+        updatePlayButton();
+      });
+    }
+
+    // Attempt autoplay on desktop / regular Safari. Failure is harmless.
+    if (!isIOSDevice && !isMetaWebView) {
+      window.addEventListener('load', startMusic, { once: true });
+    }
+
+    // Reliable user-gesture fallback for iPhone/iPad, Android WebView, and Facebook.
+    let userGestureHandled = false;
+    function handleFirstGesture() {
+      if (userGestureHandled) return;
+      userGestureHandled = true;
+      startMusic();
+      document.removeEventListener('pointerdown', handleFirstGesture);
+      document.removeEventListener('touchstart', handleFirstGesture);
+    }
+    document.addEventListener('pointerdown', handleFirstGesture, { passive: true });
+    document.addEventListener('touchstart', handleFirstGesture, { passive: true });
+
+    updatePlayButton();
+    updateMuteButton();
+
+    // Clicking outside the popup closes it.
+    document.addEventListener("click", (event) => {
+      if (
+        musicPanel.classList.contains("open") &&
+        !musicPanel.contains(event.target) &&
+        !musicOpen.contains(event.target)
+      ) {
+        musicPanel.classList.remove("open");
+        musicPanel.setAttribute("aria-hidden", "true");
+        musicOpen.setAttribute("aria-expanded", "false");
+      }
+    });
+</script>
+</body>
+</html>

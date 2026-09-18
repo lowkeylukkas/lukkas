@@ -1,4 +1,3 @@
-<!-- Lukkas GitHub Pages -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -523,6 +522,114 @@
   }
   .pill:hover { transform: scale(1.12) rotate(-3deg); }
   .pill.blue { background: #EAF6FB; color: #5FA9C4; border-color: #FFF6D6; }
+
+  /* Expanded interests / K-pop artist gallery */
+  .interests-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .interest-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 70px;
+    padding: 12px 13px;
+    border: 1px solid rgba(180, 150, 255, 0.16);
+    border-radius: 16px;
+    background: rgba(255,255,255,0.045);
+    color: #eef1ff;
+    text-align: left;
+    cursor: pointer;
+    transition: transform .2s ease, border-color .2s ease, background .2s ease, box-shadow .2s ease;
+  }
+  .interest-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(190, 145, 255, .6);
+    background: rgba(170, 120, 255, .09);
+    box-shadow: 0 10px 28px rgba(0,0,0,.22), 0 0 22px rgba(170,120,255,.12);
+  }
+  .interest-card.kpop-clickable {
+    border-color: rgba(190, 145, 255, .42);
+    background: linear-gradient(135deg, rgba(170, 120, 255, .12), rgba(70, 55, 140, .08));
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.025), 0 0 18px rgba(170,120,255,.08);
+  }
+  .interest-card.kpop-clickable::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(110deg, transparent 25%, rgba(255,255,255,.10) 50%, transparent 75%);
+    transform: translateX(-120%);
+    animation: kpopShimmer 3.2s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .interest-card.kpop-clickable .interest-icon {
+    filter: drop-shadow(0 0 8px rgba(210,170,255,.55));
+  }
+  .kpop-click-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 5px;
+    padding: 3px 7px;
+    border-radius: 999px;
+    background: rgba(190, 145, 255, .16);
+    border: 1px solid rgba(210, 180, 255, .25);
+    color: #d8bfff;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+  .kpop-click-hint::before {
+    content: "↗";
+    font-size: 10px;
+  }
+  .interest-card.kpop-clickable[aria-expanded="true"] {
+    border-color: rgba(210, 175, 255, .78);
+    background: linear-gradient(135deg, rgba(170, 120, 255, .20), rgba(70, 55, 140, .12));
+    box-shadow: 0 0 26px rgba(170,120,255,.16), inset 0 0 0 1px rgba(255,255,255,.05);
+  }
+  .interest-card.kpop-clickable[aria-expanded="true"] .interest-chevron {
+    transform: rotate(180deg);
+  }
+  @keyframes kpopShimmer {
+    0%, 55% { transform: translateX(-120%); }
+    75%, 100% { transform: translateX(120%); }
+  }
+  .interest-icon { font-size: 23px; flex: 0 0 auto; }
+  .interest-card strong { display: block; font-size: 13px; }
+  .interest-card small { display: block; margin-top: 3px; color: #9da4b9; font-size: 10.5px; }
+  .interest-chevron { margin-left: auto; color: #c6a5ff; font-size: 17px; transition: transform .2s ease; }
+  .interest-card:hover .interest-chevron { transform: translateY(2px); }
+  .interest-detail {
+    display: none;
+    margin-top: 12px;
+    padding: 13px;
+    border-radius: 18px;
+    background: rgba(5, 7, 18, .52);
+    border: 1px solid rgba(190, 145, 255, .2);
+    animation: fadeIn .22s ease;
+  }
+  .interest-detail.open { display: block; }
+  .interest-detail-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 11px; }
+  .interest-detail-head strong { display:block; font-size: 14px; }
+  .interest-detail-head small { display:block; color:#8f96ab; margin-top:3px; font-size:10.5px; }
+  .detail-close { border:0; background:rgba(255,255,255,.06); color:#d8dbea; width:28px; height:28px; border-radius:50%; cursor:pointer; font-size:18px; }
+  .artist-grid { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:10px; }
+  .artist-card { position:relative; overflow:hidden; min-height:118px; border-radius:14px; text-decoration:none; background:#11131d; border:1px solid rgba(255,255,255,.08); }
+  .artist-card img { width:100%; height:118px; object-fit:cover; display:block; transition:transform .35s ease, filter .35s ease; }
+  .artist-card::after { content:""; position:absolute; inset:0; background:linear-gradient(transparent 45%, rgba(3,4,10,.88)); }
+  .artist-card span { position:absolute; z-index:1; left:10px; right:8px; bottom:8px; color:white; font-size:12px; font-weight:700; text-shadow:0 2px 8px rgba(0,0,0,.7); }
+  .artist-card:hover img { transform:scale(1.06); filter:saturate(1.08) brightness(1.05); }
+  @media (max-width: 520px) {
+    .interests-grid { grid-template-columns: 1fr; }
+    .artist-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .artist-card, .artist-card img { min-height: 105px; height:105px; }
+  }
+
   .socials {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -1072,92 +1179,273 @@
 
   html.bg-failed body { background: #050916 !important; }
 
+
+/* ================= CHROME-STYLE PROFILE REDESIGN ================= */
+.chrome-window { width:min(960px, calc(100vw - 64px)) !important; max-width:960px !important; padding:0 !important; overflow:hidden; border-radius:18px !important; background:rgba(9,12,22,.94) !important; border:1px solid rgba(255,255,255,.16) !important; box-shadow:0 30px 90px rgba(0,0,0,.72), 0 0 0 1px rgba(255,255,255,.04) inset !important; backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); }
+.chrome-titlebar { height:38px; display:flex; align-items:center; gap:14px; padding:0 12px; background:linear-gradient(180deg,#292a2f,#1f2024); border-bottom:1px solid rgba(255,255,255,.08); color:#d7d9df; }
+.chrome-traffic { display:flex; gap:7px; width:56px; flex:none; }
+.traffic { width:11px; height:11px; border-radius:50%; display:block; box-shadow:inset 0 1px rgba(255,255,255,.28); }
+.traffic.red{background:#ff5f57}.traffic.yellow{background:#febc2e}.traffic.green{background:#28c840}
+.chrome-tab-title { flex:1; max-width:260px; height:30px; margin-top:8px; padding:7px 14px; border-radius:10px 10px 0 0; background:#15161a; color:#e7e7eb; font:500 12px/1 'Segoe UI',sans-serif; }
+.chrome-favicon { color:#b98cff; margin-right:6px; }
+.chrome-window-actions { display:flex; gap:18px; color:#9da0a8; font:13px/1 'Segoe UI',sans-serif; }
+.chrome-toolbar { height:50px; display:flex; align-items:center; gap:10px; padding:0 12px; background:#17181c; border-bottom:1px solid rgba(255,255,255,.08); }
+.chrome-nav { display:flex; gap:14px; color:#9fa2aa; font:24px/1 'Segoe UI',sans-serif; }
+.chrome-address { height:34px; flex:1; display:flex; align-items:center; gap:9px; padding:0 12px; border-radius:18px; background:#0d0e12; border:1px solid rgba(255,255,255,.08); color:#aeb1ba; font:12px 'Segoe UI',sans-serif; box-shadow:inset 0 1px 2px rgba(0,0,0,.4); }
+.address-lock{color:#9a9da5}.address-star{margin-left:auto;color:#7f828a;font-size:16px}.chrome-menu{color:#aeb0b7;font-size:21px;padding:0 4px}
+.chrome-page { padding:26px 30px 22px; background:linear-gradient(180deg,rgba(11,14,25,.92),rgba(7,10,19,.97)); }
+.site-head { display:flex; align-items:flex-start; justify-content:space-between; gap:20px; margin-bottom:20px; }
+.site-title { font:600 25px/1.1 'Segoe UI',sans-serif; color:#f2f3f7; letter-spacing:-.5px; }.site-title span{color:#a77aff}.site-subtitle{margin-top:6px;color:#858b9b;font:13px 'Segoe UI',sans-serif}.greeting{margin-bottom:5px}
+.chrome-tabs { display:grid !important; grid-template-columns:repeat(3,1fr); gap:4px !important; padding:4px !important; margin-bottom:24px; background:#0d0f17 !important; border:1px solid rgba(255,255,255,.09); border-radius:11px !important; }
+.chrome-tabs .tab-btn { min-height:42px; border-radius:8px !important; background:transparent !important; color:#8e93a2 !important; border:0 !important; font:600 13px 'Segoe UI',sans-serif !important; transition:.18s ease; }
+.chrome-tabs .tab-btn:hover{color:#e5d9ff !important;background:rgba(255,255,255,.04)!important}.chrome-tabs .tab-btn.active{color:#fff !important;background:linear-gradient(180deg,#3a2758,#24183a)!important;box-shadow:0 0 0 1px rgba(180,132,255,.32),0 5px 18px rgba(123,74,190,.22)!important}.chrome-tabs .tab-btn span{margin-right:6px;color:#c18dff}
+.tab-panel{animation:chromeTabIn .2s ease-out}.tab-panel:not(.active){display:none}@keyframes chromeTabIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+.profile-layout{display:grid;grid-template-columns:270px 1fr;gap:18px}.profile-main,.info-card,.quick-actions,.social-card,.game-tile{background:rgba(17,20,32,.82);border:1px solid rgba(255,255,255,.09);box-shadow:inset 0 1px rgba(255,255,255,.025),0 10px 30px rgba(0,0,0,.16)}
+.profile-main{border-radius:15px;padding:24px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:330px}.profile-main .avatar-wrap{width:158px;height:158px;margin:0 auto 16px}.profile-main .name{font-size:31px}.profile-main .tagline{max-width:220px}.profile-main .live-clock{margin-top:8px}
+.profile-info{display:flex;flex-direction:column;gap:12px}.info-card{border-radius:14px;padding:18px}.info-card p{margin:8px 0 13px;color:#a9afbf;font:14px/1.55 'Segoe UI',sans-serif}.mini-line{color:#aeb4c5;font:13px/1.8 'Segoe UI',sans-serif}.mini-line span{color:#b980ff;margin-right:8px}.section-label{font-size:12px!important;letter-spacing:1.5px!important;text-transform:uppercase;color:#aeb2c2!important}.interests{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.pill{font-size:12px!important;padding:7px 10px!important}.quick-actions{border-radius:14px;padding:12px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}.quick-actions button{margin:0!important;min-height:40px;font-size:12px!important}.quick-actions .bible-verse,.quick-actions .vibe-toast{grid-column:1/-1;margin:0}.tab-intro{display:flex;align-items:center;gap:12px;margin:0 0 14px;color:#b7bdcd}.tab-intro>span{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:#241738;color:#bd8cff;font-size:18px}.tab-intro strong{display:block;color:#eceef4;font:600 14px 'Segoe UI',sans-serif}.tab-intro small{display:block;color:#777e90;font:12px 'Segoe UI',sans-serif;margin-top:3px}
+.social-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.social-card{min-height:86px;padding:17px;border-radius:14px;display:flex;align-items:center;gap:13px;color:#fff;text-decoration:none;transition:.18s ease}.social-card:hover{transform:translateY(-2px);border-color:rgba(190,140,255,.35);background:rgba(27,30,46,.94)}.social-symbol{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;background:#222638;color:#e6d7ff;font:bold 20px 'Segoe UI',sans-serif}.social-card strong{display:block;font:600 14px 'Segoe UI',sans-serif}.social-card small{display:block;color:#80879a;font:12px 'Segoe UI',sans-serif;margin-top:3px}.social-card b{margin-left:auto;color:#777e90;font-size:18px}.social-card.fb .social-symbol{color:#8db5ff}.social-card.ig .social-symbol{color:#ff9dd3}.social-card.pin .social-symbol{color:#ff7f91}.social-card.lastfm .social-symbol{color:#ff8f8f}
+.games-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important}.game-tile{height:150px!important;border-radius:14px!important;overflow:hidden!important;position:relative!important;min-width:0!important}.game-tile::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.04),rgba(0,0,0,.78))}.game-tile .g-label{position:absolute;z-index:2;left:10px;right:10px;bottom:10px;background:rgba(7,8,14,.72)!important;border:1px solid rgba(255,255,255,.1);backdrop-filter:blur(6px);padding:7px 9px!important;border-radius:9px!important;color:#fff;font:700 12px 'Segoe UI',sans-serif!important}.game-tile .g-main{display:block;color:#c9cdd8;font:11px 'Segoe UI',sans-serif!important;margin-top:2px}.footer-note{margin-top:18px;font-size:10px!important}.reactions{margin-top:12px}
+@media (min-width:761px){.chrome-window{width:min(960px,calc(100vw - 64px))!important;max-width:960px!important}.chrome-page{min-height:590px}}
+@media (max-width:760px){body{padding:10px!important;align-items:flex-start}.chrome-window{width:100%!important;max-width:none!important;border-radius:14px!important;margin:0!important}.chrome-titlebar{height:34px}.chrome-window-actions{display:none}.chrome-tab-title{font-size:11px;height:27px;margin-top:7px}.chrome-toolbar{height:44px;padding:0 8px}.chrome-nav{font-size:20px;gap:10px}.chrome-address{height:31px;font-size:10px}.chrome-page{padding:18px 14px 18px}.site-head{margin-bottom:14px}.site-title{font-size:20px}.site-subtitle{font-size:11px}.achieve-badge{font-size:10px!important}.chrome-tabs{margin-bottom:16px}.chrome-tabs .tab-btn{font-size:11px!important;min-height:38px}.profile-layout{grid-template-columns:1fr}.profile-main{min-height:0;padding:20px 16px}.profile-main .avatar-wrap{width:140px;height:140px}.quick-actions{grid-template-columns:1fr}.social-grid{grid-template-columns:1fr}.games-grid{grid-template-columns:1fr 1fr!important;gap:8px!important}.game-tile{height:135px!important}.footer-note{font-size:9px!important}}
+@media (max-width:420px){.chrome-page{padding:15px 10px}.chrome-address span:nth-child(2){overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.chrome-tabs .tab-btn{padding:8px 4px!important}.game-tile{height:125px!important}}
+
+/* ============================================================
+   LUKKAS CHROME HOMEPAGE — VISUAL PASS
+   ============================================================ */
+body{align-items:center!important;justify-content:center!important;padding:28px!important}
+body::before{opacity:.32!important}
+.page-bg img{opacity:1!important;filter:saturate(1.05) contrast(1.02) brightness(.82)}
+.chrome-window{width:min(1120px,calc(100vw - 56px))!important;max-width:1120px!important;min-height:min(760px,calc(100vh - 56px));margin:auto!important;border-radius:16px!important;background:#101116!important;border:1px solid rgba(255,255,255,.18)!important;box-shadow:0 32px 100px rgba(0,0,0,.72),0 0 70px rgba(77,52,130,.18)!important;overflow:hidden!important}
+.chrome-titlebar{height:42px!important;padding:0 12px!important;background:linear-gradient(180deg,#292a2f 0%,#202126 100%)!important}
+.chrome-traffic{width:58px!important;gap:7px!important}.traffic{width:12px!important;height:12px!important}
+.chrome-tab-title{max-width:330px!important;height:33px!important;margin-top:9px!important;padding:8px 16px!important;background:#15161a!important;border-radius:10px 10px 0 0!important;font-size:12px!important}
+.chrome-toolbar{height:48px!important;padding:0 14px!important;background:#202124!important}.chrome-nav{gap:13px!important;font-size:22px!important}
+.chrome-address{height:34px!important;background:#303134!important;border:1px solid rgba(255,255,255,.04)!important;color:#c9cad0!important;box-shadow:none!important}
+.chrome-page{min-height:670px;padding:26px 34px 22px!important;background:radial-gradient(circle at 18% 8%,rgba(121,72,190,.10),transparent 34%),linear-gradient(180deg,rgba(10,12,20,.96),rgba(7,9,15,.985))!important}
+.site-head{margin-bottom:18px!important}.site-title{font-size:27px!important}.site-subtitle{font-size:13px!important}
+.chrome-tabs{grid-template-columns:repeat(3,1fr)!important;margin-bottom:20px!important;background:#17181d!important;border:1px solid rgba(255,255,255,.08)!important;border-radius:10px!important}
+.chrome-tabs .tab-btn{min-height:46px!important;font-size:14px!important;letter-spacing:.2px}.chrome-tabs .tab-btn.active{background:linear-gradient(180deg,#463063,#281a3e)!important;box-shadow:0 0 0 1px rgba(195,145,255,.34),0 7px 22px rgba(123,74,190,.18)!important}
+.profile-layout{grid-template-columns:310px 1fr!important;gap:20px!important}.profile-main{min-height:410px!important;padding:28px 24px!important}.profile-main .avatar-wrap{width:180px!important;height:180px!important}.profile-main .name{font-size:35px!important}.profile-info{gap:14px!important}.info-card{padding:20px!important}.info-card p{font-size:15px!important}
+.quick-actions{grid-template-columns:repeat(3,1fr)!important;padding:14px!important}.quick-actions .music-widget{grid-column:1/-1}
+.music-open{display:none!important}.music-panel{position:static!important;width:100%!important;max-width:none!important;padding:15px!important;display:flex!important;flex-direction:column!important;gap:9px!important;background:linear-gradient(135deg,rgba(20,23,38,.94),rgba(12,15,27,.98))!important;border:1px solid rgba(175,135,255,.22)!important;border-radius:14px!important;box-shadow:inset 0 1px rgba(255,255,255,.035),0 10px 30px rgba(0,0,0,.16)!important;backdrop-filter:none!important}
+.music-panel-head{color:#c89bff!important}.music-panel-head::after{content:'IN-APP PLAYER';margin-left:auto;font:600 9px/1 'Segoe UI',sans-serif;letter-spacing:1.2px;color:#74798a}.music-main-btn{width:44px!important;height:44px!important}.track-name{font-size:12px!important;color:#b8bdd0!important}.music-track-list{display:grid!important;grid-template-columns:repeat(4,1fr)!important}.trackBtn{min-height:34px!important;padding:7px 6px!important}.volume-title{margin-top:2px}.music-close{display:none!important}
+@media (max-width:760px){
+body{padding:8px!important;align-items:flex-start!important}.chrome-window{width:calc(100vw - 16px)!important;max-width:none!important;min-height:calc(100vh - 16px)!important;border-radius:13px!important;margin:0 auto!important}
+.chrome-titlebar{height:34px!important;padding:0 9px!important;gap:8px!important}.chrome-traffic{width:48px!important;gap:5px!important}.traffic{width:9px!important;height:9px!important}.chrome-tab-title{height:27px!important;margin-top:7px!important;padding:7px 10px!important;max-width:190px!important;font-size:10px!important}.chrome-window-actions{gap:10px!important;font-size:11px!important}
+.chrome-toolbar{height:42px!important;padding:0 8px!important;gap:6px!important}.chrome-nav{gap:8px!important;font-size:18px!important}.chrome-address{height:30px!important;padding:0 9px!important;font-size:10px!important;border-radius:15px!important}.chrome-menu{font-size:17px!important}
+.chrome-page{min-height:calc(100vh - 92px)!important;padding:16px 12px 18px!important}.site-head{margin-bottom:12px!important}.site-title{font-size:21px!important}.site-subtitle{font-size:11px!important}.achieve-badge{font-size:9px!important;padding:7px 8px!important}
+.chrome-tabs{margin-bottom:14px!important;padding:3px!important}.chrome-tabs .tab-btn{min-height:38px!important;font-size:11px!important;padding:7px 4px!important}.chrome-tabs .tab-btn span{margin-right:3px!important}
+.profile-layout{grid-template-columns:1fr!important;gap:10px!important}.profile-main{min-height:auto!important;padding:18px 14px!important}.profile-main .avatar-wrap{width:130px!important;height:130px!important;margin-bottom:10px!important}.profile-main .name{font-size:27px!important}.profile-main .tagline{font-size:14px!important}
+.info-card{padding:14px!important}.info-card p{font-size:13px!important;line-height:1.45!important}.mini-line{font-size:12px!important}.interests{gap:5px!important}.pill{font-size:11px!important;padding:6px 8px!important}
+.quick-actions{grid-template-columns:1fr 1fr!important;gap:7px!important;padding:9px!important}.quick-actions button{min-height:38px!important;font-size:11px!important}.quick-actions .music-widget{grid-column:1/-1!important}.music-panel{padding:12px!important;border-radius:12px!important}.music-track-list{grid-template-columns:1fr 1fr!important}.trackBtn{font-size:10px!important}
+.social-grid{grid-template-columns:1fr!important;gap:8px!important}.social-card{min-height:70px!important;padding:13px!important}.games-grid{grid-template-columns:1fr 1fr!important;gap:8px!important}.game-tile{min-height:150px!important}.footer-note{font-size:10px!important;line-height:1.35!important}.reactions{gap:5px!important}
+}
+@media (max-width:390px){.chrome-window{width:calc(100vw - 10px)!important}body{padding:5px!important}.chrome-page{padding-left:9px!important;padding-right:9px!important}.site-head{gap:7px!important}.site-title{font-size:19px!important}.chrome-tabs .tab-btn{font-size:10px!important}}
+
+
+/* ============================================================
+   LUKKAS V3 — CHROME HOMEPAGE DETAILS
+   Loading screen • in-app music • hover glow • notifications
+   ============================================================ */
+.boot-screen{position:fixed;inset:0;z-index:5000;display:grid;place-items:center;background:#07080d;transition:opacity .55s ease,visibility .55s ease}.boot-screen.hide{opacity:0;visibility:hidden;pointer-events:none}.boot-window{width:min(390px,calc(100vw - 42px));padding:26px 26px 22px;border:1px solid rgba(255,255,255,.14);border-radius:16px;background:linear-gradient(180deg,#1b1c21,#0f1014);box-shadow:0 30px 80px rgba(0,0,0,.65),0 0 55px rgba(156,99,255,.14);font-family:'Segoe UI',sans-serif}.boot-dots{display:flex;gap:7px;margin-bottom:24px}.boot-dots span{width:9px;height:9px;border-radius:50%;display:block}.boot-dots span:nth-child(1){background:#ff5f57}.boot-dots span:nth-child(2){background:#febc2e}.boot-dots span:nth-child(3){background:#28c840}.boot-logo{width:54px;height:54px;margin:0 auto 14px;display:grid;place-items:center;border-radius:16px;background:linear-gradient(135deg,#6f42b6,#2c1d48);border:1px solid rgba(202,157,255,.35);color:#e7cfff;font-size:26px;box-shadow:0 0 35px rgba(153,94,255,.25)}.boot-title{text-align:center;color:#f4f2f8;font-size:21px;font-weight:700}.boot-subtitle{text-align:center;margin-top:5px;color:#8d91a0;font-size:12px}.boot-bar{height:5px;margin-top:24px;border-radius:99px;overflow:hidden;background:#252631}.boot-bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,#8150c8,#d0a1ff);box-shadow:0 0 14px rgba(185,129,255,.55);animation:bootProgress 1.05s cubic-bezier(.2,.7,.2,1) forwards}.boot-status{display:flex;justify-content:space-between;margin-top:8px;color:#666b7a;font-size:9px;letter-spacing:.7px;text-transform:uppercase}.boot-status b{color:#a982d8;font-weight:600}@keyframes bootProgress{to{width:100%}}
+
+/* Chrome-style notification toast */
+.achievement{right:22px;left:auto;bottom:22px;transform:translateY(18px);display:flex;align-items:center;gap:10px;min-width:250px;max-width:min(360px,calc(100vw - 32px));padding:12px 14px;border-radius:12px;background:rgba(29,30,34,.97)!important;border:1px solid rgba(255,255,255,.12)!important;color:#ececf1!important;box-shadow:0 16px 40px rgba(0,0,0,.5),0 0 0 1px rgba(180,130,255,.05) inset;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);font:600 12px/1.35 'Segoe UI',sans-serif;white-space:normal;opacity:0;pointer-events:none;transition:opacity .22s ease,transform .22s ease,bottom .22s ease}.achievement.show{bottom:22px;opacity:1;transform:translateY(0)}
+.achievement::before{content:'✦';flex:0 0 28px;width:28px;height:28px;display:grid;place-items:center;border-radius:8px;background:linear-gradient(135deg,#5d3985,#2d1d43);color:#d6b3ff;font-size:13px}.achievement{animation:none}
+
+/* In-app music: compact media card that opens inside Personal */
+.quick-actions{position:relative}.music-widget{position:relative}.music-open{display:flex!important;position:relative!important;right:auto!important;bottom:auto!important;width:100%!important;height:auto!important;min-height:44px!important;border-radius:10px!important;align-items:center;justify-content:center;gap:8px;font:600 12px 'Segoe UI',sans-serif!important;background:linear-gradient(135deg,#2a1d3d,#181827)!important;color:#e3cbff!important;border:1px solid rgba(190,140,255,.24)!important;box-shadow:none!important;backdrop-filter:none!important}.music-open::after{content:'Music';opacity:.9}.music-open:hover{transform:translateY(-2px)!important;border-color:rgba(205,160,255,.5)!important;background:linear-gradient(135deg,#3b2855,#211b30)!important;box-shadow:0 8px 22px rgba(114,70,172,.2)!important}.music-open[aria-expanded="true"]{background:linear-gradient(135deg,#493063,#2a1d3e)!important;border-color:rgba(205,160,255,.5)!important}.music-panel{display:none!important;margin-top:9px;position:relative!important;right:auto!important;bottom:auto!important;width:100%!important;max-width:none!important}.music-panel.open{display:flex!important;animation:musicDrop .2s ease-out}@keyframes musicDrop{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:none}}
+.music-main-btn{box-shadow:0 0 0 1px rgba(197,148,255,.12),0 8px 20px rgba(80,45,120,.22)!important}.trackBtn{transition:transform .16s ease,background .16s ease,border-color .16s ease!important}.trackBtn:hover{transform:translateY(-2px)!important}.trackBtn.active{box-shadow:0 0 16px rgba(166,107,230,.12)}
+
+/* More visible desktop hover interactions */
+.game-tile{transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease,filter .25s ease!important;cursor:default}.game-tile::before{content:"";position:absolute;inset:-2px;z-index:1;background:linear-gradient(120deg,transparent 20%,rgba(206,163,255,.18) 45%,transparent 70%);transform:translateX(-120%);transition:transform .6s ease;pointer-events:none}.game-tile:hover{transform:translateY(-6px) scale(1.015)!important;border-color:rgba(205,160,255,.38)!important;box-shadow:0 18px 35px rgba(0,0,0,.42),0 0 24px rgba(136,82,202,.15)!important;filter:saturate(1.08)}.game-tile:hover::before{transform:translateX(120%)}.game-tile .g-label{transition:transform .25s ease,background .25s ease!important}.game-tile:hover .g-label{transform:translateY(-2px);background:rgba(20,16,30,.84)!important}
+.social-card{transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease,background .2s ease!important}.social-card:hover{transform:translateY(-4px) scale(1.01)!important;box-shadow:0 12px 28px rgba(0,0,0,.28),0 0 22px rgba(153,93,222,.10)!important}
+.info-card,.profile-main,.quick-actions{transition:border-color .2s ease,box-shadow .2s ease}.info-card:hover,.profile-main:hover,.quick-actions:hover{border-color:rgba(190,140,255,.16);box-shadow:inset 0 1px rgba(255,255,255,.035),0 14px 35px rgba(0,0,0,.2),0 0 24px rgba(121,74,180,.07)}
+.chrome-tabs .tab-btn{position:relative;overflow:hidden}.chrome-tabs .tab-btn::after{content:"";position:absolute;left:18%;right:18%;bottom:3px;height:2px;border-radius:99px;background:#c99aff;transform:scaleX(0);transition:transform .22s ease;box-shadow:0 0 10px rgba(201,154,255,.65)}.chrome-tabs .tab-btn.active::after{transform:scaleX(1)}
+@media(max-width:760px){.boot-window{padding:22px 20px 19px}.achievement{right:10px;left:10px;bottom:12px;min-width:0;max-width:none}.achievement.show{bottom:12px}.game-tile:hover{transform:translateY(-2px) scale(1.005)!important}.social-card:hover{transform:translateY(-2px)!important}.info-card:hover,.profile-main:hover,.quick-actions:hover{box-shadow:inset 0 1px rgba(255,255,255,.035),0 10px 24px rgba(0,0,0,.18)}}
+@media(prefers-reduced-motion:reduce){.boot-bar span{animation:none;width:100%}.game-tile::before{display:none}.boot-screen,.achievement{transition:none}}
+
+.achievement[data-icon="🎲"]::before{content:'🎲'}.achievement[data-icon="📖"]::before{content:'📖'}.achievement[data-icon="💌"]::before{content:'💌'}.achievement[data-icon="🎵"]::before{content:'🎵'}.achievement[data-icon="🎮"]::before{content:'🎮'}
+
+    .favorites-card { margin-top: 12px; }
+    .favorite-row { display:flex; align-items:center; gap:11px; padding:9px 0; border-bottom:1px solid rgba(255,255,255,.07); }
+    .favorite-row:last-child { border-bottom:0; padding-bottom:0; }
+    .favorite-row > span { width:28px; height:28px; display:grid; place-items:center; border-radius:9px; background:rgba(120,95,255,.12); font-size:15px; flex:0 0 28px; }
+    .favorite-row strong { display:block; font-size:13px; }
+    .favorite-row small { display:block; margin-top:2px; color:rgba(235,238,255,.58); font-size:11px; line-height:1.35; }
+    .now-card { margin-top: 12px; }
 </style>
 </head>
 <body>
+  <div class="boot-screen" id="bootScreen" aria-label="Loading Lukkas">
+    <div class="boot-window">
+      <div class="boot-dots"><span></span><span></span><span></span></div>
+      <div class="boot-logo">✦</div>
+      <div class="boot-title">Lukkas.exe</div>
+      <div class="boot-subtitle">Loading my little corner...</div>
+      <div class="boot-bar"><span></span></div>
+      <div class="boot-status">initializing personal space <b>100%</b></div>
+    </div>
+  </div>
   <div class="page-bg" aria-hidden="true"><img src="https://file.garden/aqtBi-Lyx_Xl-djC/From%20Klickpin.com-%20Try%20Practical%20capsule%20wardrobe%20outfits%20that%20help%20you%20create%20a%20beautiful%20result%20without%20overspending%20for%20ideas%20worth%20saving%20righ.gif" alt="" loading="eager" decoding="async" onerror="this.style.display='none'; document.documentElement.classList.add('bg-failed');"></div>
   <div class="achievement" id="achievement"></div>
-<div class="card">
-    <div class="deco">✧ ────────── ✧</div>
-    <div class="greeting" id="greeting"></div>
-    <h1>𝔴𝔢𝔩𝔠𝔬𝔪𝔢 𝔱𝔬 𝔪𝔶 𝔡𝔞𝔴𝔫</h1>
-
-    <div class="avatar-wrap" onclick="burstSparkles(event)" id="avatarWrap">
-      <img src="https://i.pinimg.com/736x/0d/40/95/0d4095f604eace5f58d27e615c56c7ff.jpg" alt="Lukkas avatar">
+<div class="card chrome-window">
+  <div class="chrome-titlebar">
+    <div class="chrome-traffic" aria-hidden="true">
+      <span class="traffic red"></span><span class="traffic yellow"></span><span class="traffic green"></span>
     </div>
+    <div class="chrome-tab-title"><span class="chrome-favicon">✦</span> Lukkas.exe</div>
+    <div class="chrome-window-actions" aria-hidden="true"><span>—</span><span>□</span><span>×</span></div>
+  </div>
 
-    <div class="name">Lukkas</div>
-    <div class="tagline" id="tagline"></div>
-    <div class="live-clock" id="liveClock"></div>
-    <button class="achieve-badge" id="achieveBadge" type="button" onclick="toggleSecrets()">0/8 secrets found</button>
+  <div class="chrome-toolbar">
+    <div class="chrome-nav" aria-hidden="true"><span>‹</span><span>›</span><span>↻</span></div>
+    <div class="chrome-address"><span class="address-lock">⌁</span><span>lowkeylukkas.github.io/lukkas/</span><span class="address-star">☆</span></div>
+    <div class="chrome-menu" aria-hidden="true">⋮</div>
+  </div>
+
+  <div class="chrome-page">
+    <div class="site-head">
+      <div>
+        <div class="greeting" id="greeting"></div>
+        <div class="site-title">Lukkas <span>•</span> personal space</div>
+        <div class="site-subtitle">welcome to my little corner of the internet</div>
+      </div>
+      <button class="achieve-badge" id="achieveBadge" type="button" onclick="toggleSecrets()">0/8 secrets found</button>
+    </div>
     <div class="secret-panel" id="secretPanel" aria-live="polite"></div>
 
-    <div class="tabs">
-      <button class="tab-btn active" onclick="showTab('profile', this)">Profile</button>
-      <button class="tab-btn" onclick="showTab('games', this)">Games I Play</button>
+    <div class="tabs chrome-tabs">
+      <button class="tab-btn active" onclick="showTab('profile', this)"><span>♙</span> Personal</button>
+      <button class="tab-btn" onclick="showTab('socials', this)"><span>⌁</span> Socials</button>
+      <button class="tab-btn" onclick="showTab('games', this)"><span>♧</span> Games</button>
     </div>
 
     <div id="tab-profile" class="tab-panel active">
-      <div class="section-label">Interests</div>
-      <div class="interests">
-        <span class="pill">Badminton</span>
-        <span class="pill blue">Volleyball</span>
-        <span class="pill">Music</span>
-        <span class="pill blue">K-pop</span>
-        <span class="pill">Swimming</span>
-        <span class="pill blue">Jogging</span>
-        <span class="pill">Gym</span>
-      </div>
+      <div class="profile-layout">
+        <div class="profile-main">
+          <div class="avatar-wrap" onclick="burstSparkles(event)" id="avatarWrap">
+            <img src="https://i.pinimg.com/736x/0d/40/95/0d4095f604eace5f58d27e615c56c7ff.jpg" alt="Lukkas avatar">
+          </div>
+          <div class="name">Lukkas</div>
+          <div class="tagline" id="tagline"></div>
+          <div class="live-clock" id="liveClock"></div>
+        </div>
 
-      <div class="section-label">Find Me</div>
-      <div class="socials">
-        <a class="fb" href="https://www.facebook.com/lukkashere/" target="_blank" rel="noopener noreferrer" onclick="socialClick(event)">
-          <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12.06C22 6.51 17.52 2 12 2S2 6.51 2 12.06c0 5 3.66 9.14 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.51 1.49-3.9 3.77-3.9 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.89h2.78l-.44 2.91h-2.34V22c4.78-.8 8.44-4.94 8.44-9.94z"/></svg>
-          Facebook
-        </a>
-        <a class="ig" href="https://www.instagram.com/lukkaslowkey/" target="_blank" rel="noopener noreferrer" onclick="socialClick(event)">
-          <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2c2.72 0 3.06.01 4.12.06 1.06.05 1.79.22 2.43.47.66.26 1.22.6 1.77 1.15.55.55.9 1.11 1.15 1.77.25.64.42 1.37.47 2.43.05 1.06.06 1.4.06 4.12s-.01 3.06-.06 4.12c-.05 1.06-.22 1.79-.47 2.43a4.9 4.9 0 0 1-1.15 1.77 4.9 4.9 0 0 1-1.77 1.15c-.64.25-1.37.42-2.43.47-1.06.05-1.4.06-4.12.06s-3.06-.01-4.12-.06c-1.06-.05-1.79-.22-2.43-.47a4.9 4.9 0 0 1-1.77-1.15 4.9 4.9 0 0 1-1.15-1.77c-.25-.64-.42-1.37-.47-2.43C2.01 15.06 2 14.72 2 12s.01-3.06.06-4.12c.05-1.06.22-1.79.47-2.43.26-.66.6-1.22 1.15-1.77A4.9 4.9 0 0 1 5.45.53C6.09.28 6.82.11 7.88.06 8.94.01 9.28 0 12 0zm0 5.84A6.16 6.16 0 1 0 12 18.16 6.16 6.16 0 0 0 12 5.84zm0 10.16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.4-10.4a1.44 1.44 0 1 1-2.88 0 1.44 1.44 0 0 1 2.88 0z" transform="translate(0 2)"/></svg>
-          Instagram
-        </a>
-        <a class="pin" href="https://pin.it/3pwCPEXxb" target="_blank" rel="noopener noreferrer" onclick="socialClick(event)">
-          <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.08 3.16 9.42 7.62 11.17-.1-.95-.2-2.4.04-3.44.22-.94 1.4-6 1.4-6s-.36-.72-.36-1.78c0-1.67.97-2.92 2.17-2.92 1.02 0 1.52.77 1.52 1.68 0 1.03-.65 2.56-.99 3.98-.28 1.19.6 2.16 1.77 2.16 2.13 0 3.77-2.24 3.77-5.48 0-2.87-2.06-4.87-5-4.87-3.41 0-5.41 2.56-5.41 5.2 0 1.03.4 2.13.89 2.73.1.12.11.22.08.34-.09.37-.29 1.19-.33 1.36-.05.22-.17.27-.4.16-1.49-.69-2.42-2.87-2.42-4.62 0-3.76 2.73-7.22 7.88-7.22 4.14 0 7.36 2.95 7.36 6.89 0 4.11-2.59 7.42-6.19 7.42-1.21 0-2.35-.63-2.74-1.37l-.74 2.83c-.27 1.04-1 2.34-1.49 3.14A12 12 0 1 0 12 0z"/></svg>
-          Pinterest
-        </a>
-        <a class="lastfm" href="https://www.last.fm/user/whiskeykisako" target="_blank" rel="noopener noreferrer" onclick="socialClick(event)">
-          <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M10.584 0 0 3.334v17.332L10.584 24l10.584-3.334V3.334L10.584 0zm3.996 17.79c-1.68 0-2.856-.882-3.708-2.478l-.822-1.554c-.564-1.05-1.176-1.998-2.316-1.998-.996 0-1.638.678-1.638 1.578 0 1.05.744 1.62 1.836 1.62.522 0 .924-.126 1.29-.336l.564 1.446c-.564.336-1.35.522-2.106.522-1.986 0-3.408-1.242-3.408-3.09 0-1.86 1.41-3.156 3.36-3.156 1.746 0 2.706 1.008 3.402 2.34l.816 1.548c.51.966 1.026 1.518 1.884 1.518 1.146 0 1.752-.876 1.752-2.058 0-1.62-1.152-2.856-2.808-2.856-.564 0-1.038.114-1.404.276l-.51-1.464c.522-.246 1.242-.408 2.028-.408 2.556 0 4.446 1.83 4.446 4.398 0 2.256-1.536 3.802-3.658 3.802z"/></svg>
-          Last.fm
-        </a>
+        <div class="profile-info">
+          <div class="info-card">
+            <div class="section-label">About me</div>
+            <p>A little space for my interests, music, games, random thoughts, and whatever I'm into lately.</p>
+            <div class="mini-line"><span>✦</span> Badminton · K-pop · Music</div>
+            <div class="mini-line"><span>✦</span> Games · Anime · Good vibes</div>
+          </div>
+
+          <div class="info-card interests-card">
+            <div class="section-label">Interests</div>
+            <div class="interests-grid">
+              <button class="interest-card kpop-clickable" type="button" aria-expanded="false" aria-controls="kpopInterest" onclick="toggleInterest('kpopInterest', this)">
+                <span class="interest-icon">🎧</span>
+                <span><strong>K-pop</strong><small>artists I listen to</small><span class="kpop-click-hint">Click to explore</span></span>
+                <span class="interest-chevron">⌄</span>
+              </button>
+              <button class="interest-card" type="button"><span class="interest-icon">🎮</span><span><strong>Gaming</strong><small>my games & mains</small></span></button>
+              <button class="interest-card" type="button"><span class="interest-icon">🎵</span><span><strong>Music</strong><small>songs & instrumentals</small></span></button>
+              <button class="interest-card" type="button"><span class="interest-icon">🏸</span><span><strong>Badminton</strong><small>one of my hobbies</small></span></button>
+              <button class="interest-card" type="button"><span class="interest-icon">🏐</span><span><strong>Volleyball</strong><small>another hobby</small></span></button>
+              <button class="interest-card" type="button"><span class="interest-icon">✨</span><span><strong>More</strong><small>swimming · jogging · gym</small></span></button>
+            </div>
+
+            <div id="kpopInterest" class="interest-detail" aria-hidden="true">
+              <div class="interest-detail-head">
+                <div><strong>🎧 K-pop</strong><small>artists I like listening to</small></div>
+                <button type="button" class="detail-close" onclick="toggleInterest('kpopInterest')" aria-label="Close K-pop artists">×</button>
+              </div>
+              <div class="artist-grid">
+                <a class="artist-card" href="https://i.redd.it/aespa-the-1st-album-armageddon-concept-photo-unkown-v0-sdwpp1k3z62d1.jpg?width=4096&format=pjpg&auto=webp&s=1a728d8ff5076eb70e8a20029f0b388dc3bd838d" target="_blank" rel="noopener"><img src="https://i.redd.it/aespa-the-1st-album-armageddon-concept-photo-unkown-v0-sdwpp1k3z62d1.jpg?width=4096&format=pjpg&auto=webp&s=1a728d8ff5076eb70e8a20029f0b388dc3bd838d" alt="aespa"><span>aespa</span></a>
+                <a class="artist-card" href="https://i.redd.it/red-velvet-surfin-boy-mv-images-v0-8owzj0iaudgh1.jpg?width=4096&format=pjpg&auto=webp&s=066af43d592ec647489f1eb04c2a55987d46ddcd" target="_blank" rel="noopener"><img src="https://i.redd.it/red-velvet-surfin-boy-mv-images-v0-8owzj0iaudgh1.jpg?width=4096&format=pjpg&auto=webp&s=066af43d592ec647489f1eb04c2a55987d46ddcd" alt="Red Velvet"><span>Red Velvet</span></a>
+                <a class="artist-card" href="https://i.redd.it/usalgmoj89471.jpg" target="_blank" rel="noopener"><img src="https://i.redd.it/usalgmoj89471.jpg" alt="LOONA"><span>LOONA</span></a>
+                <a class="artist-card" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaKZY7c4lOBhn-x2MvY48SrY9u8ixWKz47Py0TB5o0IfbDLhM2nd1RHiI&s=10" target="_blank" rel="noopener"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaKZY7c4lOBhn-x2MvY48SrY9u8ixWKz47Py0TB5o0IfbDLhM2nd1RHiI&s=10" alt="Yves"><span>Yves</span></a>
+                <a class="artist-card" href="https://pbs.twimg.com/media/HATe_PIbsAAPO8C.jpg" target="_blank" rel="noopener"><img src="https://pbs.twimg.com/media/HATe_PIbsAAPO8C.jpg" alt="IVE"><span>IVE</span></a>
+                <a class="artist-card" href="https://theknockturnal.com/wp-content/uploads/2024/08/Group-Photo_Concept-2-scaled-e1724089869244.jpg" target="_blank" rel="noopener"><img src="https://theknockturnal.com/wp-content/uploads/2024/08/Group-Photo_Concept-2-scaled-e1724089869244.jpg" alt="NMIXX"><span>NMIXX</span></a>
+                <a class="artist-card" href="https://lh3.googleusercontent.com/SrwW3npfmTSYwJxXm-N8HeojcNBg_82CAcmDtJo3ezgy11B0oAE1cZNepDnsoeIZ6-2ftqIK3LuQR9CUcSy_OC-Y3NkQdHPwq04kTuUXmQIhzI8=nu-e365-rj-q80" target="_blank" rel="noopener"><img src="https://lh3.googleusercontent.com/SrwW3npfmTSYwJxXm-N8HeojcNBg_82CAcmDtJo3ezgy11B0oAE1cZNepDnsoeIZ6-2ftqIK3LuQR9CUcSy_OC-Y3NkQdHPwq04kTuUXmQIhzI8=nu-e365-rj-q80" alt="LE SSERAFIM"><span>LE SSERAFIM</span></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="quick-actions">
+            <div class="music-widget">
+  <button id="musicOpen" class="music-open" aria-label="Open music controls" aria-expanded="false">
+    ♪
+  </button>
+
+  <div id="musicPanel" class="music-panel" aria-hidden="true">
+    <div class="music-panel-head">
+      <span>♪</span>
+      <button id="musicClose" class="music-close" aria-label="Close music controls">×</button>
+    </div>
+
+    <button id="musicToggle" class="music-main-btn" aria-label="Play or pause music">▶</button>
+
+    <div id="trackName" class="track-name">aespa — Supernova (Instrumental)</div>
+
+    <div class="music-track-list">
+      <button class="trackBtn active" data-track="supernova">✦ Supernova</button>
+      <button class="trackBtn" data-track="armageddon">⚡ Armageddon</button>
+      <button class="trackBtn" data-track="whiplash">✦ Whiplash</button>
+      <button class="trackBtn" data-track="lemonade">🍋 LEMONADE</button>
+    </div>
+
+    <div class="volume-title">Volume</div>
+    <input id="musicVolume" class="volume-slider" aria-label="Music volume" type="range" min="0" max="100" value="50">
+
+    <button id="musicMute" class="mute-btn" aria-pressed="false">🔊 Mute</button>
+  </div>
+
+</div>
+            
+            <button class="vibe-btn" onclick="rollVibe()">🎲 Roll my vibe</button>
+            <button class="bible-btn" onclick="showVerse()">📖 Your Bible Verse</button>
+            <button class="compliment-btn" onclick="getCompliment()">💌 Get a compliment</button>
+            <div class="bible-verse" id="bibleVerse"></div>
+            <div class="vibe-toast" id="vibeToast"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-socials" class="tab-panel">
+      <div class="tab-intro"><span>⌁</span><div><strong>Find me around the internet</strong><small>tap a card to open the profile</small></div></div>
+      <div class="social-grid">
+        <a class="social-card fb" href="https://www.facebook.com/lukkashere/" target="_blank" rel="noopener noreferrer" onclick="socialClick(event)"><span class="social-symbol">f</span><span><strong>Facebook</strong><small>@lukkashere</small></span><b>↗</b></a>
+        <a class="social-card ig" href="https://www.instagram.com/lukkaslowkey/" target="_blank" rel="noopener noreferrer" onclick="socialClick(event)"><span class="social-symbol">◎</span><span><strong>Instagram</strong><small>@lukkaslowkey</small></span><b>↗</b></a>
+        <a class="social-card pin" href="https://pin.it/3pwCPEXxb" target="_blank" rel="noopener noreferrer" onclick="socialClick(event)"><span class="social-symbol">p</span><span><strong>Pinterest</strong><small>inspiration board</small></span><b>↗</b></a>
+        <a class="social-card lastfm" href="https://www.last.fm/user/whiskeykisako" target="_blank" rel="noopener noreferrer" onclick="socialClick(event)"><span class="social-symbol">♪</span><span><strong>Last.fm</strong><small>whiskeykisako</small></span><b>↗</b></a>
       </div>
     </div>
 
     <div id="tab-games" class="tab-panel">
+      <div class="tab-intro"><span>♧</span><div><strong>Games I play</strong><small>my current mains</small></div></div>
       <div class="games-grid">
-        <div class="game-tile g1" style="background-image: url('https://i.pinimg.com/736x/98/42/6d/98426d69c4e07e8a38107661e4c2d1ab.jpg'); background-size: cover; background-position: center;"><span class="g-label" style="background: rgba(0,0,0,0.35); padding: 4px 8px; border-radius: 8px;">HSR<span class="g-main">main: Blade</span></span></div>
-        <div class="game-tile g2" style="background-image: url('https://i.pinimg.com/736x/76/4b/85/764b8568647ae570fbd88eb302528cd4.jpg'); background-size: cover; background-position: center;"><span class="g-label" style="background: rgba(0,0,0,0.35); padding: 4px 8px; border-radius: 8px;">Genshin<span class="g-main">main: Wriothesley</span></span></div>
-        <div class="game-tile g3" style="background-image: url('https://i.pinimg.com/736x/cb/6a/f8/cb6af82c7fec9e6389bc62b496cdc64e.jpg'); background-size: cover; background-position: center;"><span class="g-label" style="background: rgba(0,0,0,0.35); padding: 4px 8px; border-radius: 8px;">HI3<span class="g-main">main: Elysia</span></span></div>
-        <div class="game-tile g4" style="background-image: url('https://i.pinimg.com/736x/20/27/1f/20271f2ce28151d7fe74da4e1653d75b.jpg'); background-size: cover; background-position: center;"><span class="g-label" style="background: rgba(0,0,0,0.35); padding: 4px 8px; border-radius: 8px;">NTE<span class="g-main">main: Zankou</span></span></div>
-        <div class="game-tile g5" style="background-image: url('https://i.pinimg.com/736x/41/e8/0a/41e80a9fe34f5917b9a96d818a620f9f.jpg'); background-size: cover; background-position: center;"><span class="g-label" style="background: rgba(0,0,0,0.35); padding: 4px 8px; border-radius: 8px;">WuWa<span class="g-main">main: Hsin</span></span></div>
-        <div class="game-tile g6" style="background-image: url('https://i.pinimg.com/736x/15/dc/73/15dc730db7a577059ed16c720bf6f489.jpg'); background-size: cover; background-position: center;"><span class="g-label" style="background: rgba(0,0,0,0.35); padding: 4px 8px; border-radius: 8px;">MLBB<span class="g-main">main: Eudora</span></span></div>
-        <div class="game-tile g7" style="background-image: url('https://i.pinimg.com/736x/4e/e5/2e/4ee52e80a347549a8af8ecba46eec648.jpg'); background-size: cover; background-position: center;"><span class="g-label" style="background: rgba(0,0,0,0.35); padding: 4px 8px; border-radius: 8px;">CODM<span class="g-main">main: Kreuger</span></span></div>
-        <div class="game-tile g8" style="background-image: url('https://i.pinimg.com/736x/82/67/4e/82674e7da51604aea9d57cc6220400d1.jpg'); background-size: cover; background-position: center;"><span class="g-label" style="background: rgba(0,0,0,0.35); padding: 4px 8px; border-radius: 8px;">ZZZ<span class="g-main">main: Remielle</span></span></div>
+        <div class="game-tile g1" style="background-image:url('https://i.pinimg.com/736x/98/42/6d/98426d69c4e07e8a38107661e4c2d1ab.jpg'); background-size:cover; background-position:center;"><span class="g-label">HSR<span class="g-main">main: Blade</span></span></div>
+        <div class="game-tile g2" style="background-image:url('https://i.pinimg.com/736x/76/4b/85/764b8568647ae570fbd88eb302528cd4.jpg'); background-size:cover; background-position:center;"><span class="g-label">Genshin<span class="g-main">main: Wriothesley</span></span></div>
+        <div class="game-tile g3" style="background-image:url('https://i.pinimg.com/736x/cb/6a/f8/cb6af82c7fec9e6389bc62b496cdc64e.jpg'); background-size:cover; background-position:center;"><span class="g-label">HI3<span class="g-main">main: Elysia</span></span></div>
+        <div class="game-tile g4" style="background-image:url('https://i.pinimg.com/736x/20/27/1f/20271f2ce28151d7fe74da4e1653d75b.jpg'); background-size:cover; background-position:center;"><span class="g-label">NTE<span class="g-main">main: Zankou</span></span></div>
+        <div class="game-tile g5" style="background-image:url('https://i.pinimg.com/736x/41/e8/0a/41e80a9fe34f5917b9a96d818a620f9f.jpg'); background-size:cover; background-position:center;"><span class="g-label">WuWa<span class="g-main">main: Hsin</span></span></div>
+        <div class="game-tile g6" style="background-image:url('https://i.pinimg.com/736x/15/dc/73/15dc730db7a577059ed16c720bf6f489.jpg'); background-size:cover; background-position:center;"><span class="g-label">MLBB<span class="g-main">main: Eudora</span></span></div>
+        <div class="game-tile g7" style="background-image:url('https://i.pinimg.com/736x/4e/e5/2e/4ee52e80a347549a8af8ecba46eec648.jpg'); background-size:cover; background-position:center;"><span class="g-label">CODM<span class="g-main">main: Kreuger</span></span></div>
+        <div class="game-tile g8" style="background-image:url('https://i.pinimg.com/736x/82/67/4e/82674e7da51604aea9d57cc6220400d1.jpg'); background-size:cover; background-position:center;"><span class="g-label">ZZZ<span class="g-main">main: Remielle</span></span></div>
       </div>
     </div>
 
     <div class="footer-note">✦ this website is updated constantly, and this website is independently owned by me! thanks for stopping by :3 ✦</div>
-
     <div class="reactions">
       <button class="reaction-btn" onclick="react('😄', this)">😄<span class="reaction-count" id="count-happy">0</span></button>
       <button class="reaction-btn" onclick="react('🔥', this)">🔥<span class="reaction-count" id="count-fire">0</span></button>
       <button class="reaction-btn" onclick="react('💙', this)">💙<span class="reaction-count" id="count-heart">0</span></button>
       <button class="reaction-btn" onclick="react('😭', this)">😭<span class="reaction-count" id="count-cry">0</span></button>
     </div>
-
-    <button class="vibe-btn" onclick="rollVibe()">🎲 Roll my vibe</button>
-    <button class="bible-btn" onclick="showVerse()">📖 Your Bible Verse</button>
-    <div class="bible-verse" id="bibleVerse"></div>
-    <button class="compliment-btn" onclick="getCompliment()">💌 Get a compliment</button>
-    <div class="vibe-toast" id="vibeToast"></div>
   </div>
+</div>
 
   <script>
     // Facebook/Meta in-app browsers can be stricter than Safari/Chrome.
@@ -1185,6 +1473,7 @@
       document.getElementById('tab-' + tab).classList.add('active');
       btn.classList.add('active');
       if (tab === 'games') {
+        notify('Games library opened', '🎮');
         showAchievement('games-explorer', 'checked out the games tab');
       }
     }
@@ -1402,6 +1691,7 @@
     function rollVibe() {
       const pick = vibes[Math.floor(Math.random() * vibes.length)];
       document.getElementById('vibeToast').textContent = pick;
+      notify(pick, '🎲');
       playClick(750);
       if (!safeGet('lukkas_ach_vibe-roller')) {
         showAchievement('vibe-roller', 'rolled your first vibe check');
@@ -1553,6 +1843,7 @@
     function getCompliment() {
       const pick = compliments[Math.floor(Math.random() * compliments.length)];
       document.getElementById('vibeToast').textContent = pick;
+      notify(pick, '💌');
       playClick(950);
       if (!safeGet('lukkas_ach_compliment-collector')) {
         showAchievement('compliment-collector', 'collected your first compliment');
@@ -1693,41 +1984,43 @@
       const el = document.getElementById('bibleVerse');
       el.innerHTML = '"' + pick.text + '"<span class="verse-ref">' + pick.ref + '</span>';
       el.classList.add('show');
+      notify(pick.ref + ' — verse unlocked', '📖');
       playClick(900);
       if (!safeGet('lukkas_ach_verse-reader')) {
         showAchievement('verse-reader', 'read your first verse');
       }
     }
+
+    function toggleInterest(id, trigger) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const open = el.classList.toggle('open');
+      el.setAttribute('aria-hidden', open ? 'false' : 'true');
+      if (trigger) trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open) notify('K-pop artists unlocked', '🎧');
+    }
+
+    // V3 boot screen — short intro. Do not wait for external images/audio.
+    // Start immediately so the Armageddon GIF cannot block the page.
+    setTimeout(() => {
+      const boot = document.getElementById('bootScreen');
+      if (boot) boot.classList.add('hide');
+    }, 1200);
+
+    // V3 Chrome-style notification helper.
+    function notify(message, icon = '✦') {
+      const el = document.getElementById('achievement');
+      if (!el) return;
+      el.dataset.icon = icon;
+      el.innerHTML = '<span class="notify-text">' + message + '</span>';
+      el.classList.add('show');
+      clearTimeout(window.__lukkasNotifyTimer);
+      window.__lukkasNotifyTimer = setTimeout(() => el.classList.remove('show'), 2800);
+    }
+
   </script>
 
   <!-- ---------- MUSIC CONTROL ---------- -->
-  <button id="musicOpen" class="music-open" aria-label="Open music controls" aria-expanded="false">
-    ♪
-  </button>
-
-  <div id="musicPanel" class="music-panel" aria-hidden="true">
-    <div class="music-panel-head">
-      <span>♪</span>
-      <button id="musicClose" class="music-close" aria-label="Close music controls">×</button>
-    </div>
-
-    <button id="musicToggle" class="music-main-btn" aria-label="Play or pause music">▶</button>
-
-    <div id="trackName" class="track-name">aespa — Supernova (Instrumental)</div>
-
-    <div class="music-track-list">
-      <button class="trackBtn active" data-track="supernova">✦ Supernova</button>
-      <button class="trackBtn" data-track="armageddon">⚡ Armageddon</button>
-      <button class="trackBtn" data-track="whiplash">✦ Whiplash</button>
-      <button class="trackBtn" data-track="lemonade">🍋 LEMONADE</button>
-    </div>
-
-    <div class="volume-title">Volume</div>
-    <input id="musicVolume" class="volume-slider" aria-label="Music volume" type="range" min="0" max="100" value="50">
-
-    <button id="musicMute" class="mute-btn" aria-pressed="false">🔊 Mute</button>
-  </div>
-
   <audio id="bgMusic" loop preload="metadata" playsinline></audio>
 
   <script>
@@ -1789,6 +2082,7 @@
 
       if (playNow) {
         audio.play().catch(() => {});
+        if (typeof notify === 'function') notify('Now playing: ' + track.name.replace(' (Instrumental)', ''), '🎵');
       }
       updatePlayButton();
     }

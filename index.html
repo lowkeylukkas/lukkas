@@ -551,6 +551,47 @@
     box-shadow: 0 10px 28px rgba(0,0,0,.22), 0 0 22px rgba(170,120,255,.12);
   }
   .interest-card.kpop-clickable {
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .interest-card.kpop-clickable::after {
+    content: "TAP / CLICK";
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 5px 8px;
+    border-radius: 999px;
+    background: rgba(205, 165, 255, .22);
+    border: 1px solid rgba(225, 200, 255, .45);
+    color: #eadbff;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: .1em;
+    box-shadow: 0 0 14px rgba(190,145,255,.18);
+    animation: kpopPulse 1.8s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .interest-card.kpop-clickable:hover,
+  .interest-card.kpop-clickable:focus-visible {
+    transform: translateY(-5px) scale(1.015);
+    border-color: rgba(225, 195, 255, .95);
+    background: linear-gradient(135deg, rgba(180, 125, 255, .24), rgba(75, 55, 150, .14));
+    box-shadow: 0 14px 34px rgba(0,0,0,.28), 0 0 34px rgba(180,125,255,.28);
+    outline: none;
+  }
+  .interest-card.kpop-clickable:active {
+    transform: translateY(-1px) scale(.99);
+  }
+  .interest-card.kpop-clickable:hover .kpop-click-hint,
+  .interest-card.kpop-clickable:focus-visible .kpop-click-hint {
+    background: rgba(220, 185, 255, .28);
+    color: #fff;
+  }
+  @keyframes kpopPulse {
+    0%, 100% { opacity: .78; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.04); }
+  }
     border-color: rgba(190, 145, 255, .42);
     background: linear-gradient(135deg, rgba(170, 120, 255, .12), rgba(70, 55, 140, .08));
     box-shadow: inset 0 0 0 1px rgba(255,255,255,.025), 0 0 18px rgba(170,120,255,.08);
@@ -1275,6 +1316,75 @@ body{padding:8px!important;align-items:flex-start!important}.chrome-window{width
     .favorite-row small { display:block; margin-top:2px; color:rgba(235,238,255,.58); font-size:11px; line-height:1.35; }
     .now-card { margin-top: 12px; }
 </style>
+<style>
+/* FINAL MOBILE FIX — game cards stay inside their grid and labels wrap cleanly */
+.games-grid {
+  min-width: 0 !important;
+  align-items: stretch !important;
+}
+.game-tile {
+  min-width: 0 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  aspect-ratio: 16 / 10 !important;
+  height: auto !important;
+  min-height: 0 !important;
+}
+.game-tile .g-label {
+  left: 8px !important;
+  right: 8px !important;
+  bottom: 8px !important;
+  max-width: calc(100% - 16px) !important;
+  box-sizing: border-box !important;
+  overflow-wrap: anywhere !important;
+  word-break: normal !important;
+  white-space: normal !important;
+  line-height: 1.15 !important;
+}
+.game-tile .g-main {
+  white-space: normal !important;
+  line-height: 1.2 !important;
+}
+@media (max-width: 760px) {
+  .chrome-window,
+  .chrome-page,
+  .tab-panel,
+  .games-grid {
+    min-width: 0 !important;
+    max-width: 100% !important;
+  }
+  .games-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 9px !important;
+  }
+  .game-tile {
+    aspect-ratio: 16 / 10 !important;
+  }
+  .game-tile .g-label {
+    font-size: clamp(9px, 2.7vw, 11px) !important;
+    padding: 6px 7px !important;
+  }
+  .game-tile .g-main {
+    font-size: clamp(8px, 2.3vw, 10px) !important;
+  }
+}
+@media (max-width: 390px) {
+  .games-grid {
+    gap: 7px !important;
+  }
+  .game-tile .g-label {
+    left: 6px !important;
+    right: 6px !important;
+    bottom: 6px !important;
+    max-width: calc(100% - 12px) !important;
+    padding: 5px 6px !important;
+    font-size: 9px !important;
+  }
+  .game-tile .g-main {
+    font-size: 8px !important;
+  }
+}
+</style>
 </head>
 <body>
   <div class="boot-screen" id="bootScreen" aria-label="Loading Lukkas">
@@ -1345,7 +1455,7 @@ body{padding:8px!important;align-items:flex-start!important}.chrome-window{width
             <div class="interests-grid">
               <button class="interest-card kpop-clickable" type="button" aria-expanded="false" aria-controls="kpopInterest" onclick="toggleInterest('kpopInterest', this)">
                 <span class="interest-icon">🎧</span>
-                <span><strong>K-pop</strong><small>artists I listen to</small><span class="kpop-click-hint">Click to explore</span></span>
+                <span><strong>K-pop</strong><small>artists I listen to</small><span class="kpop-click-hint">CLICK TO OPEN</span></span>
                 <span class="interest-chevron">⌄</span>
               </button>
               <button class="interest-card" type="button"><span class="interest-icon">🎮</span><span><strong>Gaming</strong><small>my games & mains</small></span></button>
@@ -1426,14 +1536,14 @@ body{padding:8px!important;align-items:flex-start!important}.chrome-window{width
     <div id="tab-games" class="tab-panel">
       <div class="tab-intro"><span>♧</span><div><strong>Games I play</strong><small>my current mains</small></div></div>
       <div class="games-grid">
-        <div class="game-tile g1" style="background-image:url('https://i.pinimg.com/736x/98/42/6d/98426d69c4e07e8a38107661e4c2d1ab.jpg'); background-size:cover; background-position:center;"><span class="g-label">HSR<span class="g-main">main: Blade</span></span></div>
-        <div class="game-tile g2" style="background-image:url('https://i.pinimg.com/736x/76/4b/85/764b8568647ae570fbd88eb302528cd4.jpg'); background-size:cover; background-position:center;"><span class="g-label">Genshin<span class="g-main">main: Wriothesley</span></span></div>
-        <div class="game-tile g3" style="background-image:url('https://i.pinimg.com/736x/cb/6a/f8/cb6af82c7fec9e6389bc62b496cdc64e.jpg'); background-size:cover; background-position:center;"><span class="g-label">HI3<span class="g-main">main: Elysia</span></span></div>
-        <div class="game-tile g4" style="background-image:url('https://i.pinimg.com/736x/20/27/1f/20271f2ce28151d7fe74da4e1653d75b.jpg'); background-size:cover; background-position:center;"><span class="g-label">NTE<span class="g-main">main: Zankou</span></span></div>
-        <div class="game-tile g5" style="background-image:url('https://i.pinimg.com/736x/41/e8/0a/41e80a9fe34f5917b9a96d818a620f9f.jpg'); background-size:cover; background-position:center;"><span class="g-label">WuWa<span class="g-main">main: Hsin</span></span></div>
-        <div class="game-tile g6" style="background-image:url('https://i.pinimg.com/736x/15/dc/73/15dc730db7a577059ed16c720bf6f489.jpg'); background-size:cover; background-position:center;"><span class="g-label">MLBB<span class="g-main">main: Eudora</span></span></div>
-        <div class="game-tile g7" style="background-image:url('https://i.pinimg.com/736x/4e/e5/2e/4ee52e80a347549a8af8ecba46eec648.jpg'); background-size:cover; background-position:center;"><span class="g-label">CODM<span class="g-main">main: Kreuger</span></span></div>
-        <div class="game-tile g8" style="background-image:url('https://i.pinimg.com/736x/82/67/4e/82674e7da51604aea9d57cc6220400d1.jpg'); background-size:cover; background-position:center;"><span class="g-label">ZZZ<span class="g-main">main: Remielle</span></span></div>
+        <div class="game-tile g1" style="background-image:url('https://i.pinimg.com/736x/98/42/6d/98426d69c4e07e8a38107661e4c2d1ab.jpg'); background-size:cover; background-position:center;"><span class="g-label">Honkai: Star Rail<span class="g-main">main: Blade</span></span></div>
+        <div class="game-tile g2" style="background-image:url('https://i.pinimg.com/736x/76/4b/85/764b8568647ae570fbd88eb302528cd4.jpg'); background-size:cover; background-position:center;"><span class="g-label">Genshin Impact<span class="g-main">main: Wriothesley</span></span></div>
+        <div class="game-tile g3" style="background-image:url('https://i.pinimg.com/736x/cb/6a/f8/cb6af82c7fec9e6389bc62b496cdc64e.jpg'); background-size:cover; background-position:center;"><span class="g-label">Honkai Impact 3rd<span class="g-main">main: Elysia</span></span></div>
+        <div class="game-tile g4" style="background-image:url('https://i.pinimg.com/736x/20/27/1f/20271f2ce28151d7fe74da4e1653d75b.jpg'); background-size:cover; background-position:center;"><span class="g-label">Neverness to Everness<span class="g-main">main: Zankou</span></span></div>
+        <div class="game-tile g5" style="background-image:url('https://i.pinimg.com/736x/41/e8/0a/41e80a9fe34f5917b9a96d818a620f9f.jpg'); background-size:cover; background-position:center;"><span class="g-label">Wuthering Waves<span class="g-main">main: Hsin</span></span></div>
+        <div class="game-tile g6" style="background-image:url('https://i.pinimg.com/736x/15/dc/73/15dc730db7a577059ed16c720bf6f489.jpg'); background-size:cover; background-position:center;"><span class="g-label">Mobile Legends: Bang Bang<span class="g-main">main: Eudora</span></span></div>
+        <div class="game-tile g7" style="background-image:url('https://i.pinimg.com/736x/4e/e5/2e/4ee52e80a347549a8af8ecba46eec648.jpg'); background-size:cover; background-position:center;"><span class="g-label">Call of Duty: Mobile<span class="g-main">main: Kreuger</span></span></div>
+        <div class="game-tile g8" style="background-image:url('https://i.pinimg.com/736x/82/67/4e/82674e7da51604aea9d57cc6220400d1.jpg'); background-size:cover; background-position:center;"><span class="g-label">Zenless Zone Zero<span class="g-main">main: Remielle</span></span></div>
       </div>
     </div>
 

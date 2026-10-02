@@ -1385,6 +1385,970 @@ body{padding:8px!important;align-items:flex-start!important}.chrome-window{width
   }
 }
 </style>
+
+<style>
+.artist-card.hearts2hearts-card {
+  border-color: rgba(255, 120, 210, .72);
+  box-shadow: 0 0 18px rgba(255, 120, 210, .18);
+}
+.artist-card.hearts2hearts-card::after {
+  content: "NEW";
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 3px 7px;
+  border-radius: 999px;
+  background: rgba(255, 105, 200, .92);
+  color: #180b1d;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+</style>
+
+
+<style id="game-photo-final-fix">
+/* FINAL GAME PHOTO FIX — each original artwork is explicitly restored. */
+.games-grid .game-tile {
+  background-color:#08080d !important;
+  background-repeat:no-repeat !important;
+  background-size:cover !important;
+  background-position:center !important;
+}
+.game-tile.g1 { background-image:url('https://i.pinimg.com/736x/98/42/6d/98426d69c4e07e8a38107661e4c2d1ab.jpg') !important; }
+.game-tile.g2 { background-image:url('https://i.pinimg.com/736x/76/4b/85/764b8568647ae570fbd88eb302528cd4.jpg') !important; }
+.game-tile.g3 { background-image:url('https://i.pinimg.com/736x/cb/6a/f8/cb6af82c7fec9e6389bc62b496cdc64e.jpg') !important; }
+.game-tile.g4 { background-image:url('https://i.pinimg.com/736x/20/27/1f/20271f2ce28151d7fe74da4e1653d75b.jpg') !important; }
+.game-tile.g5 { background-image:url('https://i.pinimg.com/736x/41/e8/0a/41e80a9fe34f5917b9a96d818a620f9f.jpg') !important; }
+.game-tile.g6 { background-image:url('https://i.pinimg.com/736x/15/dc/73/15dc730db7a577059ed16c720bf6f489.jpg') !important; }
+.game-tile.g7 { background-image:url('https://i.pinimg.com/736x/4e/e5/2e/4ee52e80a347549a8af8ecba46eec648.jpg') !important; }
+.game-tile.g8 { background-image:url('https://i.pinimg.com/736x/82/67/4e/82674e7da51604aea9d57cc6220400d1.jpg') !important; }
+
+/* Keep the artwork visible beneath the atmospheric lighting layers. */
+.games-grid .game-tile::before {
+  z-index:1 !important;
+  pointer-events:none !important;
+}
+.games-grid .game-tile::after {
+  z-index:2 !important;
+  pointer-events:none !important;
+}
+.games-grid .game-tile .g-label {
+  z-index:5 !important;
+}
+</style>
+
+
+<style id="ultra-realistic-interface">
+/* =========================================================
+   ULTRA REALISTIC MODE
+   Aiming for: real browser / real glass / real monitor UI,
+   not "rounded purple cards".
+   ========================================================= */
+
+:root{
+  --u-bg:#07070a;
+  --u-panel:rgba(18,18,21,.82);
+  --u-panel2:rgba(24,24,28,.72);
+  --u-edge:rgba(255,255,255,.115);
+  --u-edge-soft:rgba(255,255,255,.055);
+  --u-text:rgba(245,245,248,.92);
+  --u-muted:rgba(225,225,232,.46);
+  --u-accent:#b85cff;
+}
+
+/* --- Environment: make the GIF look like a real scene behind glass --- */
+html,body{
+  background:#020204 !important;
+}
+.page-bg{
+  filter:brightness(.46) saturate(.72) contrast(1.14) blur(.15px) !important;
+  transform:scale(1.045) !important;
+}
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  z-index:-1;
+  pointer-events:none;
+  background:
+    radial-gradient(ellipse at 50% 45%, transparent 24%, rgba(0,0,0,.28) 70%, rgba(0,0,0,.62) 100%),
+    linear-gradient(180deg,rgba(0,0,0,.15),rgba(0,0,0,.34));
+}
+
+/* --- Browser becomes an object with a bezel, not a card --- */
+.chrome-window{
+  background:#0b0b0e !important;
+  border:1px solid rgba(255,255,255,.16) !important;
+  border-radius:13px !important;
+  box-shadow:
+    0 70px 140px rgba(0,0,0,.78),
+    0 24px 55px rgba(0,0,0,.52),
+    0 4px 12px rgba(0,0,0,.48),
+    0 0 0 1px rgba(0,0,0,.72),
+    inset 0 1px 0 rgba(255,255,255,.10) !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+}
+
+/* Subtle bezel reflection */
+.chrome-window::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  pointer-events:none;
+  z-index:20;
+  background:
+    linear-gradient(118deg,rgba(255,255,255,.075),transparent 13%,transparent 74%,rgba(255,255,255,.018));
+  mix-blend-mode:screen;
+}
+
+/* --- Real browser top bar --- */
+.chrome-titlebar{
+  min-height:34px !important;
+  background:
+    linear-gradient(180deg,#222227,#17171b) !important;
+  border-bottom:1px solid rgba(0,0,0,.85) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.075),
+    0 1px 0 rgba(255,255,255,.025) !important;
+}
+.chrome-tab-title{
+  background:linear-gradient(180deg,#29292e,#1b1b1f) !important;
+  border:1px solid rgba(255,255,255,.07) !important;
+  border-bottom:0 !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.055) !important;
+}
+.chrome-toolbar{
+  background:linear-gradient(180deg,#19191d,#121216) !important;
+  border-bottom:1px solid #050506 !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035) !important;
+}
+.chrome-nav span{
+  color:rgba(255,255,255,.52) !important;
+}
+.chrome-address{
+  background:#101014 !important;
+  border:1px solid #08080a !important;
+  box-shadow:
+    inset 0 2px 5px rgba(0,0,0,.42),
+    inset 0 1px 0 rgba(255,255,255,.035),
+    0 1px 0 rgba(255,255,255,.025) !important;
+}
+
+/* --- Actual page surface: less gradient, more material --- */
+.chrome-page{
+  background:
+    radial-gradient(circle at 73% 0%,rgba(127,55,180,.075),transparent 25%),
+    linear-gradient(180deg,#101014 0%,#0a0a0d 48%,#070709 100%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.025),
+    inset 0 -40px 80px rgba(0,0,0,.22) !important;
+}
+.chrome-page::before{
+  opacity:.055 !important;
+  background-image:
+    radial-gradient(rgba(255,255,255,.7) .35px,transparent .45px) !important;
+  background-size:4px 4px !important;
+}
+
+/* --- Typography: editorial, not game UI --- */
+.site-title{
+  font-weight:650 !important;
+  letter-spacing:-.035em !important;
+  text-shadow:0 2px 12px rgba(0,0,0,.62) !important;
+}
+.site-subtitle{
+  letter-spacing:.01em !important;
+  color:rgba(255,255,255,.37) !important;
+}
+.greeting{
+  opacity:.82 !important;
+}
+
+/* --- Tabs: real segmented browser control --- */
+.chrome-tabs{
+  background:#111115 !important;
+  border:1px solid #050506 !important;
+  border-radius:9px !important;
+  padding:3px !important;
+  box-shadow:
+    inset 0 1px 2px rgba(0,0,0,.52),
+    inset 0 1px 0 rgba(255,255,255,.045),
+    0 2px 8px rgba(0,0,0,.28) !important;
+}
+.tab-btn{
+  border-radius:6px !important;
+  background:transparent !important;
+  border:1px solid transparent !important;
+  color:rgba(255,255,255,.42) !important;
+  box-shadow:none !important;
+}
+.tab-btn:hover{
+  background:rgba(255,255,255,.035) !important;
+}
+.tab-btn.active{
+  background:linear-gradient(180deg,#29232d,#211c25) !important;
+  border-color:rgba(255,255,255,.08) !important;
+  color:rgba(255,255,255,.88) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.075),
+    0 2px 5px rgba(0,0,0,.42) !important;
+}
+
+/* --- Section containers: stop every thing from looking like a pill --- */
+.info-card,
+.social-card,
+.interest-detail,
+.music-panel,
+.secret-panel{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.008)),
+    #121216 !important;
+  border:1px solid rgba(255,255,255,.075) !important;
+  border-radius:10px !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.045),
+    inset 0 -1px 0 rgba(0,0,0,.65),
+    0 12px 28px rgba(0,0,0,.26) !important;
+}
+
+/* Remove excessive "floating card" feeling. */
+.info-card:hover,
+.social-card:hover{
+  transform:none !important;
+}
+
+/* --- Avatar: real photo object with lens-like depth --- */
+.avatar-wrap{
+  background:#09090c !important;
+  border:1px solid rgba(255,255,255,.18) !important;
+  box-shadow:
+    0 25px 48px rgba(0,0,0,.62),
+    0 7px 16px rgba(0,0,0,.42),
+    inset 0 1px 0 rgba(255,255,255,.14),
+    inset 0 -5px 14px rgba(0,0,0,.24) !important;
+}
+
+/* --- Interest controls: tactile but not toy-like --- */
+.interest-card{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.012)),
+    #151519 !important;
+  border:1px solid rgba(255,255,255,.075) !important;
+  border-radius:8px !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.045),
+    0 5px 12px rgba(0,0,0,.20) !important;
+}
+.interest-card:hover{
+  transform:translateY(-1px) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.07),
+    0 9px 18px rgba(0,0,0,.30) !important;
+}
+
+/* --- K-pop images: photographic gallery instead of UI stickers --- */
+.artist-card{
+  background:#08080a !important;
+  border:1px solid rgba(255,255,255,.11) !important;
+  border-radius:9px !important;
+  box-shadow:
+    0 13px 25px rgba(0,0,0,.40),
+    inset 0 1px 0 rgba(255,255,255,.075) !important;
+}
+.artist-card span{
+  background:linear-gradient(180deg,rgba(8,8,10,.18),rgba(8,8,10,.82)) !important;
+  backdrop-filter:blur(7px) !important;
+}
+
+/* --- Games: actual media cards with depth --- */
+#tab-games .game-tile,
+.game-tile{
+  border-radius:9px !important;
+  border:1px solid rgba(255,255,255,.13) !important;
+  box-shadow:
+    0 22px 42px rgba(0,0,0,.56),
+    0 6px 13px rgba(0,0,0,.34),
+    inset 0 1px 0 rgba(255,255,255,.10),
+    inset 0 -1px 0 rgba(0,0,0,.75) !important;
+  transition:
+    transform .30s cubic-bezier(.2,.75,.2,1),
+    box-shadow .30s ease,
+    border-color .25s ease !important;
+}
+#tab-games .game-tile:hover,
+.game-tile:hover{
+  transform:translateY(-4px) scale(1.008) !important;
+  border-color:rgba(255,255,255,.20) !important;
+  box-shadow:
+    0 31px 60px rgba(0,0,0,.66),
+    0 9px 18px rgba(0,0,0,.40),
+    inset 0 1px 0 rgba(255,255,255,.14) !important;
+}
+#tab-games .game-tile .g-label,
+.game-tile .g-label{
+  border-radius:6px !important;
+  background:rgba(8,8,10,.72) !important;
+  border:1px solid rgba(255,255,255,.085) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.055),
+    0 5px 12px rgba(0,0,0,.30) !important;
+  backdrop-filter:blur(10px) saturate(115%) !important;
+}
+
+/* --- Reactions: physical buttons, not floating emojis --- */
+.reaction-btn{
+  border-radius:8px !important;
+  background:linear-gradient(180deg,#1b1b23,#121217) !important;
+  border:1px solid rgba(255,255,255,.07) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.06),
+    0 7px 14px rgba(0,0,0,.30) !important;
+}
+.reaction-btn:active{
+  transform:translateY(1px) !important;
+  box-shadow:inset 0 2px 5px rgba(0,0,0,.34) !important;
+}
+
+/* --- Loading / notification surfaces --- */
+.toast,
+.notification{
+  background:rgba(18,18,22,.92) !important;
+  border:1px solid rgba(255,255,255,.11) !important;
+  border-radius:9px !important;
+  box-shadow:0 20px 48px rgba(0,0,0,.58) !important;
+  backdrop-filter:blur(18px) !important;
+}
+
+/* --- Mobile should feel like a real app, not a desktop squeezed down --- */
+@media (max-width:760px){
+  .chrome-window{
+    border-radius:11px !important;
+    box-shadow:
+      0 35px 75px rgba(0,0,0,.70),
+      0 10px 25px rgba(0,0,0,.42) !important;
+  }
+  .chrome-titlebar{
+    min-height:30px !important;
+  }
+  .chrome-toolbar{
+    min-height:34px !important;
+  }
+  .chrome-page{
+    background:#09090c !important;
+  }
+  .chrome-tabs{
+    border-radius:8px !important;
+  }
+}
+
+/* Respect reduced motion. */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    transition:none !important;
+    animation:none !important;
+  }
+}
+</style>
+
+
+<style id="maximum-realism">
+/* =========================================================
+   LUKKAS — MAXIMUM REALISM
+   Direction: premium desktop app / physical glass monitor /
+   photographic depth / restrained UI.
+   ========================================================= */
+
+:root{
+  --mr-black:#050507;
+  --mr-surface:#101014;
+  --mr-surface2:#151519;
+  --mr-border:rgba(255,255,255,.105);
+  --mr-highlight:rgba(255,255,255,.12);
+  --mr-shadow:rgba(0,0,0,.72);
+}
+
+/* REAL ENVIRONMENT */
+html{
+  background:#000 !important;
+}
+body{
+  background:#000 !important;
+  overflow-x:hidden !important;
+}
+.page-bg{
+  filter:
+    brightness(.38)
+    saturate(.62)
+    contrast(1.18)
+    !important;
+  transform:scale(1.07) !important;
+}
+.page-bg::after{
+  content:"" !important;
+  position:absolute !important;
+  inset:0 !important;
+  background:
+    radial-gradient(ellipse at 50% 42%,
+      transparent 12%,
+      rgba(0,0,0,.10) 42%,
+      rgba(0,0,0,.50) 100%),
+    linear-gradient(180deg,
+      rgba(0,0,0,.18),
+      rgba(0,0,0,.34)) !important;
+}
+
+/* Subtle display bloom around the browser, like light emitted from a monitor. */
+body::before{
+  content:"" !important;
+  position:fixed !important;
+  z-index:-1 !important;
+  pointer-events:none !important;
+  width:68vw !important;
+  height:55vh !important;
+  left:16vw !important;
+  top:23vh !important;
+  background:radial-gradient(ellipse,rgba(108,52,150,.10),transparent 67%) !important;
+  filter:blur(35px) !important;
+}
+
+/* PHYSICAL BROWSER SHELL */
+.chrome-window{
+  background:#08080b !important;
+  border:1px solid rgba(255,255,255,.14) !important;
+  border-radius:12px !important;
+  box-shadow:
+    0 90px 150px rgba(0,0,0,.82),
+    0 38px 70px rgba(0,0,0,.55),
+    0 10px 20px rgba(0,0,0,.42),
+    0 0 0 1px rgba(0,0,0,.90),
+    inset 0 1px 0 rgba(255,255,255,.11),
+    inset 0 -1px 0 rgba(0,0,0,.90) !important;
+  transform-style:preserve-3d !important;
+  will-change:transform !important;
+}
+
+/* Monitor/glass reflection across the entire window. */
+.chrome-window::after{
+  content:"" !important;
+  position:absolute !important;
+  inset:1px !important;
+  z-index:50 !important;
+  pointer-events:none !important;
+  border-radius:11px !important;
+  background:
+    linear-gradient(112deg,
+      rgba(255,255,255,.075) 0%,
+      rgba(255,255,255,.018) 17%,
+      transparent 35%,
+      transparent 78%,
+      rgba(255,255,255,.025) 100%) !important;
+  mix-blend-mode:screen !important;
+}
+
+/* CHROME MATERIAL */
+.chrome-titlebar{
+  background:
+    linear-gradient(180deg,#28282d 0%,#1b1b1f 46%,#141418 100%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.10),
+    inset 0 -1px 0 rgba(0,0,0,.80) !important;
+}
+.chrome-tab-title{
+  background:
+    linear-gradient(180deg,#303035,#202024 70%,#1b1b1f) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    0 -1px 5px rgba(0,0,0,.15) !important;
+}
+.chrome-toolbar{
+  background:
+    linear-gradient(180deg,#1c1c20,#131317) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.035),
+    inset 0 -1px 0 rgba(0,0,0,.90) !important;
+}
+.chrome-address{
+  background:
+    linear-gradient(180deg,#111114,#0d0d10) !important;
+  border:1px solid #070709 !important;
+  box-shadow:
+    inset 0 2px 6px rgba(0,0,0,.50),
+    inset 0 1px 0 rgba(255,255,255,.04),
+    0 1px 0 rgba(255,255,255,.025) !important;
+}
+
+/* PAGE = SCREEN SURFACE */
+.chrome-page{
+  background:
+    radial-gradient(circle at 73% 0%,rgba(141,66,190,.055),transparent 26%),
+    linear-gradient(180deg,#111114 0%,#0a0a0d 52%,#070709 100%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.025),
+    inset 0 -60px 100px rgba(0,0,0,.20) !important;
+}
+.chrome-page::before{
+  opacity:.035 !important;
+}
+
+/* REMOVE "EVERYTHING IS A CARD" FEEL */
+.info-card,
+.social-card,
+.interest-detail,
+.music-panel{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.032),rgba(255,255,255,.006)),
+    #121216 !important;
+  border:1px solid rgba(255,255,255,.075) !important;
+  border-radius:8px !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.045),
+    inset 0 -1px 0 rgba(0,0,0,.72),
+    0 13px 30px rgba(0,0,0,.28) !important;
+}
+
+/* REAL TYPOGRAPHIC HIERARCHY */
+.site-title{
+  font-weight:600 !important;
+  letter-spacing:-.04em !important;
+  text-shadow:0 2px 14px rgba(0,0,0,.65) !important;
+}
+.site-subtitle{
+  opacity:.65 !important;
+  letter-spacing:.015em !important;
+}
+.section-label{
+  letter-spacing:.035em !important;
+  font-weight:600 !important;
+}
+
+/* PHYSICAL SEGMENT CONTROL */
+.chrome-tabs{
+  background:#0e0e11 !important;
+  border:1px solid #050506 !important;
+  border-radius:7px !important;
+  box-shadow:
+    inset 0 2px 4px rgba(0,0,0,.42),
+    inset 0 1px 0 rgba(255,255,255,.035),
+    0 2px 8px rgba(0,0,0,.28) !important;
+}
+.tab-btn{
+  border-radius:5px !important;
+}
+.tab-btn.active{
+  background:
+    linear-gradient(180deg,#29222f,#201b25) !important;
+  border-color:rgba(255,255,255,.08) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.075),
+    inset 0 -1px 0 rgba(0,0,0,.55),
+    0 2px 5px rgba(0,0,0,.45) !important;
+}
+
+/* PHOTO OBJECTS */
+.avatar-wrap{
+  box-shadow:
+    0 32px 60px rgba(0,0,0,.68),
+    0 9px 20px rgba(0,0,0,.48),
+    inset 0 1px 0 rgba(255,255,255,.15),
+    inset 0 -8px 18px rgba(0,0,0,.28) !important;
+}
+
+/* GAME MEDIA — physical framed artwork */
+#tab-games .game-tile,
+.game-tile{
+  background-color:#070709 !important;
+  border-radius:8px !important;
+  border:1px solid rgba(255,255,255,.15) !important;
+  box-shadow:
+    0 28px 48px rgba(0,0,0,.62),
+    0 8px 16px rgba(0,0,0,.40),
+    inset 0 1px 0 rgba(255,255,255,.13),
+    inset 0 -1px 0 rgba(0,0,0,.80) !important;
+  transform-style:preserve-3d !important;
+  overflow:hidden !important;
+}
+#tab-games .game-tile:hover,
+.game-tile:hover{
+  transform:translateY(-5px) scale(1.009) !important;
+  box-shadow:
+    0 38px 70px rgba(0,0,0,.70),
+    0 11px 22px rgba(0,0,0,.46),
+    inset 0 1px 0 rgba(255,255,255,.16) !important;
+}
+#tab-games .game-tile .g-label,
+.game-tile .g-label{
+  background:
+    linear-gradient(180deg,rgba(5,5,8,.15),rgba(5,5,8,.80)) !important;
+  border:1px solid rgba(255,255,255,.085) !important;
+  border-radius:6px !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.065),
+    0 7px 15px rgba(0,0,0,.34) !important;
+  backdrop-filter:blur(12px) saturate(110%) !important;
+}
+
+/* K-POP PHOTOGRAPHIC GALLERY */
+.artist-card{
+  background:#070709 !important;
+  border:1px solid rgba(255,255,255,.13) !important;
+  border-radius:8px !important;
+  box-shadow:
+    0 20px 35px rgba(0,0,0,.52),
+    inset 0 1px 0 rgba(255,255,255,.085) !important;
+}
+.artist-card img{
+  filter:saturate(.90) contrast(1.05) !important;
+}
+.artist-card:hover{
+  transform:translateY(-4px) !important;
+  box-shadow:
+    0 30px 55px rgba(0,0,0,.65),
+    0 0 22px rgba(170,90,255,.08) !important;
+}
+
+/* TACTILE CONTROLS */
+.interest-card,
+.reaction-btn,
+.music-open,
+.music-main-btn{
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.008)),
+    #151519 !important;
+  border:1px solid rgba(255,255,255,.075) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.055),
+    inset 0 -1px 0 rgba(0,0,0,.65),
+    0 7px 15px rgba(0,0,0,.28) !important;
+}
+.interest-card:hover,
+.reaction-btn:hover{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.075),
+    0 11px 20px rgba(0,0,0,.36) !important;
+}
+.interest-card:active,
+.reaction-btn:active,
+.music-main-btn:active{
+  transform:translateY(1px) scale(.992) !important;
+  box-shadow:
+    inset 0 3px 6px rgba(0,0,0,.40),
+    0 2px 5px rgba(0,0,0,.25) !important;
+}
+
+/* MICRO-SCRATCH / GLASS HIGHLIGHT ON SURFACES */
+.info-card::after,
+.interest-detail::after,
+.social-card::after,
+.music-panel::after{
+  content:"" !important;
+  position:absolute !important;
+  inset:0 !important;
+  pointer-events:none !important;
+  border-radius:inherit !important;
+  background:
+    linear-gradient(115deg,rgba(255,255,255,.045),transparent 20%,transparent 78%,rgba(255,255,255,.015)) !important;
+}
+
+/* REALISTIC NOTIFICATION */
+.toast,
+.notification{
+  background:rgba(17,17,20,.94) !important;
+  border:1px solid rgba(255,255,255,.11) !important;
+  border-radius:8px !important;
+  box-shadow:
+    0 24px 55px rgba(0,0,0,.62),
+    inset 0 1px 0 rgba(255,255,255,.065) !important;
+  backdrop-filter:blur(20px) saturate(115%) !important;
+}
+
+/* MOBILE = NATIVE APP FEEL */
+@media(max-width:760px){
+  .chrome-window{
+    border-radius:10px !important;
+    box-shadow:
+      0 45px 85px rgba(0,0,0,.75),
+      0 12px 28px rgba(0,0,0,.44) !important;
+  }
+  .chrome-titlebar{min-height:29px !important;}
+  .chrome-toolbar{min-height:33px !important;}
+  .chrome-page{
+    background:#09090c !important;
+  }
+  .chrome-tabs{
+    border-radius:7px !important;
+  }
+}
+
+/* No artificial motion if the device requests reduced motion. */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation:none !important;
+    transition:none !important;
+  }
+}
+</style>
+
+
+<style id="h2h-final-and-birthday">
+/* Hearts2Hearts: make it a normal photographic gallery card, not a broken
+   narrow label/overlay. */
+.artist-card.hearts2hearts-card{
+  position:relative !important;
+  display:block !important;
+  width:100% !important;
+  min-width:0 !important;
+  min-height:0 !important;
+  aspect-ratio:16 / 10 !important;
+  overflow:hidden !important;
+  border-radius:9px !important;
+  background:#070709 !important;
+  border:1px solid rgba(255,255,255,.13) !important;
+}
+.artist-card.hearts2hearts-card img{
+  position:absolute !important;
+  inset:0 !important;
+  display:block !important;
+  width:100% !important;
+  height:100% !important;
+  max-width:none !important;
+  max-height:none !important;
+  object-fit:cover !important;
+  object-position:center !important;
+  opacity:1 !important;
+  visibility:visible !important;
+  z-index:1 !important;
+  transform:none !important;
+}
+.artist-card.hearts2hearts-card::before{
+  content:"" !important;
+  position:absolute !important;
+  inset:0 !important;
+  z-index:2 !important;
+  pointer-events:none !important;
+  background:linear-gradient(180deg,transparent 42%,rgba(0,0,0,.72) 100%) !important;
+}
+.artist-card.hearts2hearts-card::after{
+  content:"NEW" !important;
+  position:absolute !important;
+  top:8px !important;
+  right:8px !important;
+  z-index:4 !important;
+  padding:3px 7px !important;
+  border-radius:999px !important;
+  background:rgba(255,105,200,.92) !important;
+  color:#180b1d !important;
+  font-size:8px !important;
+  font-weight:900 !important;
+  letter-spacing:.08em !important;
+}
+.artist-card.hearts2hearts-card > span{
+  position:absolute !important;
+  left:8px !important;
+  right:8px !important;
+  bottom:8px !important;
+  z-index:5 !important;
+  display:block !important;
+  width:auto !important;
+  box-sizing:border-box !important;
+  padding:7px 9px !important;
+  border-radius:7px !important;
+  background:rgba(8,8,12,.76) !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  color:#fff !important;
+  white-space:nowrap !important;
+  line-height:1.2 !important;
+  backdrop-filter:blur(8px) !important;
+  -webkit-backdrop-filter:blur(8px) !important;
+}
+
+/* Profile details */
+.profile-birthday-row{
+  display:flex !important;
+  flex-wrap:wrap !important;
+  align-items:center !important;
+  gap:7px 18px !important;
+  margin-top:9px !important;
+  color:rgba(255,255,255,.62) !important;
+  font-size:12px !important;
+}
+.profile-birthday-row strong{
+  color:rgba(255,255,255,.90) !important;
+}
+</style>
+
+<style id="birthday-placement-fix">
+.profile-main .profile-birthday-row{justify-content:center;width:100%;margin:10px auto 0;}
+</style>
+
+<style id="h2h-clean-final">
+/* Clean Hearts2Hearts card — no pink circle/badge overlays. */
+.artist-card.hearts2hearts-card::before,
+.artist-card.hearts2hearts-card::after {
+  content:none !important;
+  display:none !important;
+}
+.artist-card.hearts2hearts-card {
+  position:relative !important;
+  overflow:hidden !important;
+  background:#070709 !important;
+}
+.artist-card.hearts2hearts-card img {
+  position:absolute !important;
+  inset:0 !important;
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover !important;
+  object-position:center !important;
+  display:block !important;
+  opacity:1 !important;
+  visibility:visible !important;
+}
+.artist-card.hearts2hearts-card > span {
+  position:absolute !important;
+  left:8px !important;
+  right:8px !important;
+  bottom:8px !important;
+  z-index:3 !important;
+  display:block !important;
+  width:auto !important;
+  padding:7px 9px !important;
+  border-radius:7px !important;
+  background:rgba(8,8,12,.76) !important;
+  color:#fff !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  backdrop-filter:blur(8px) !important;
+  -webkit-backdrop-filter:blur(8px) !important;
+}
+</style>
+
+
+<style id="h2h-grid-final">
+.artist-card.hearts2hearts-card::before,
+.artist-card.hearts2hearts-card::after {
+  content:none !important;
+  display:none !important;
+}
+.artist-card.hearts2hearts-card {
+  position:relative !important;
+  overflow:hidden !important;
+  min-width:0 !important;
+  min-height:0 !important;
+  width:auto !important;
+  aspect-ratio:auto !important;
+  background:#070709 !important;
+}
+.artist-card.hearts2hearts-card img {
+  position:absolute !important;
+  inset:0 !important;
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover !important;
+  object-position:center !important;
+  display:block !important;
+  opacity:1 !important;
+  visibility:visible !important;
+}
+.artist-card.hearts2hearts-card > span {
+  position:absolute !important;
+  left:8px !important;
+  right:8px !important;
+  bottom:8px !important;
+  z-index:3 !important;
+  display:block !important;
+  width:auto !important;
+  padding:6px 8px !important;
+  border-radius:6px !important;
+  background:rgba(8,8,12,.72) !important;
+  color:#fff !important;
+  border:1px solid rgba(255,255,255,.10) !important;
+  backdrop-filter:blur(7px) !important;
+  -webkit-backdrop-filter:blur(7px) !important;
+}
+</style>
+
+
+<style id="realistic-no-white-wash">
+/* REALISTIC, not "white reflection": remove the bright glass-film look. */
+.chrome-window::after{
+  display:none !important;
+  content:none !important;
+}
+.chrome-page::before{
+  opacity:.018 !important;
+}
+.chrome-tabs{
+  background:#0d0d11 !important;
+  border:1px solid rgba(255,255,255,.055) !important;
+  box-shadow:
+    inset 0 1px 2px rgba(0,0,0,.62),
+    inset 0 -1px 0 rgba(255,255,255,.018),
+    0 3px 10px rgba(0,0,0,.34) !important;
+}
+.chrome-tabs .tab-btn{
+  background:transparent !important;
+  border:1px solid transparent !important;
+  color:rgba(255,255,255,.42) !important;
+  box-shadow:none !important;
+  text-shadow:none !important;
+}
+.chrome-tabs .tab-btn:hover{
+  background:#15151a !important;
+  color:rgba(255,255,255,.72) !important;
+}
+.chrome-tabs .tab-btn.active{
+  background:
+    linear-gradient(180deg,#27212f 0%,#1d1923 48%,#18151b 100%) !important;
+  border:1px solid rgba(183,145,220,.16) !important;
+  color:#eeeaf2 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(190,155,220,.07),
+    inset 0 -1px 0 rgba(0,0,0,.55),
+    0 2px 7px rgba(0,0,0,.45) !important;
+}
+.chrome-tabs .tab-btn.active::after{
+  background:rgba(185,135,230,.48) !important;
+  box-shadow:none !important;
+  height:1px !important;
+}
+
+/* Remove the broad white diagonal sheen from the browser surface. */
+.chrome-window,
+.chrome-titlebar,
+.chrome-toolbar,
+.chrome-page{
+  background-image:none !important;
+}
+
+/* Keep material depth through edges/shadows rather than white overlays. */
+.chrome-window{
+  box-shadow:
+    0 55px 110px rgba(0,0,0,.78),
+    0 16px 35px rgba(0,0,0,.48),
+    0 0 0 1px rgba(255,255,255,.025) !important;
+}
+.chrome-titlebar{
+  background:linear-gradient(180deg,#242428,#18181c) !important;
+  box-shadow:
+    inset 0 -1px 0 rgba(0,0,0,.82),
+    inset 0 1px 0 rgba(255,255,255,.025) !important;
+}
+.chrome-toolbar{
+  background:linear-gradient(180deg,#18181c,#111114) !important;
+  box-shadow:
+    inset 0 -1px 0 rgba(0,0,0,.8),
+    inset 0 1px 0 rgba(255,255,255,.018) !important;
+}
+.chrome-page{
+  background:#0b0b0f !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.012),
+    inset 0 -30px 60px rgba(0,0,0,.18) !important;
+}
+</style>
+
 </head>
 <body>
   <div class="boot-screen" id="bootScreen" aria-label="Loading Lukkas">
@@ -1433,13 +2397,17 @@ body{padding:8px!important;align-items:flex-start!important}.chrome-window{width
 
     <div id="tab-profile" class="tab-panel active">
       <div class="profile-layout">
-        <div class="profile-main">
+<div class="profile-main">
           <div class="avatar-wrap" onclick="burstSparkles(event)" id="avatarWrap">
             <img src="https://i.pinimg.com/736x/0d/40/95/0d4095f604eace5f58d27e615c56c7ff.jpg" alt="Lukkas avatar">
           </div>
           <div class="name">Lukkas</div>
           <div class="tagline" id="tagline"></div>
           <div class="live-clock" id="liveClock"></div>
+          <div class="profile-birthday-row">
+            <span><strong>Birthday</strong> 01.23.12</span>
+            <span><strong>Age</strong> 14</span>
+          </div>
         </div>
 
         <div class="profile-info">
@@ -1476,13 +2444,17 @@ body{padding:8px!important;align-items:flex-start!important}.chrome-window{width
                 <a class="artist-card" href="https://i.redd.it/usalgmoj89471.jpg" target="_blank" rel="noopener"><img src="https://i.redd.it/usalgmoj89471.jpg" alt="LOONA"><span>LOONA</span></a>
                 <a class="artist-card" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaKZY7c4lOBhn-x2MvY48SrY9u8ixWKz47Py0TB5o0IfbDLhM2nd1RHiI&s=10" target="_blank" rel="noopener"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaKZY7c4lOBhn-x2MvY48SrY9u8ixWKz47Py0TB5o0IfbDLhM2nd1RHiI&s=10" alt="Yves"><span>Yves</span></a>
                 <a class="artist-card" href="https://pbs.twimg.com/media/HATe_PIbsAAPO8C.jpg" target="_blank" rel="noopener"><img src="https://pbs.twimg.com/media/HATe_PIbsAAPO8C.jpg" alt="IVE"><span>IVE</span></a>
-                <a class="artist-card" href="https://theknockturnal.com/wp-content/uploads/2024/08/Group-Photo_Concept-2-scaled-e1724089869244.jpg" target="_blank" rel="noopener"><img src="https://theknockturnal.com/wp-content/uploads/2024/08/Group-Photo_Concept-2-scaled-e1724089869244.jpg" alt="NMIXX"><span>NMIXX</span></a>
+                <a class="artist-card" href="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Nmixx_at_Music_Bank_on_20240830.png/1280px-Nmixx_at_Music_Bank_on_20240830.png" target="_blank" rel="noopener"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Nmixx_at_Music_Bank_on_20240830.png/1280px-Nmixx_at_Music_Bank_on_20240830.png" alt="NMIXX"><span>NMIXX</span></a>
                 <a class="artist-card" href="https://lh3.googleusercontent.com/SrwW3npfmTSYwJxXm-N8HeojcNBg_82CAcmDtJo3ezgy11B0oAE1cZNepDnsoeIZ6-2ftqIK3LuQR9CUcSy_OC-Y3NkQdHPwq04kTuUXmQIhzI8=nu-e365-rj-q80" target="_blank" rel="noopener"><img src="https://lh3.googleusercontent.com/SrwW3npfmTSYwJxXm-N8HeojcNBg_82CAcmDtJo3ezgy11B0oAE1cZNepDnsoeIZ6-2ftqIK3LuQR9CUcSy_OC-Y3NkQdHPwq04kTuUXmQIhzI8=nu-e365-rj-q80" alt="LE SSERAFIM"><span>LE SSERAFIM</span></a>
+              
+                <a class="artist-card hearts2hearts-card" href="https://pbs.twimg.com/media/HBZ6A5pa8AAP10n?format=webp&name=large" target="_blank" rel="noopener" aria-label="Hearts2Hearts image">
+  <img src="https://pbs.twimg.com/media/HBZ6A5pa8AAP10n?format=webp&name=large" alt="Hearts2Hearts">
+  <span>Hearts2Hearts 💗</span>
+</a>
               </div>
-            </div>
-          </div>
-
-          <div class="quick-actions">
+</div>
+</div>
+<div class="quick-actions">
             <div class="music-widget">
   <button id="musicOpen" class="music-open" aria-label="Open music controls" aria-expanded="false">
     ♪
@@ -2289,5 +3261,36 @@ body{padding:8px!important;align-items:flex-start!important}.chrome-window{width
       }
     });
 </script>
+
+<script id="realistic-parallax">
+(() => {
+  const win = document.querySelector('.chrome-window');
+  if (!win || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  let raf = 0;
+  let tx = 0, ty = 0;
+
+  const apply = () => {
+    raf = 0;
+    win.style.transform =
+      `perspective(1800px) rotateX(${ty.toFixed(3)}deg) rotateY(${tx.toFixed(3)}deg)`;
+  };
+
+  window.addEventListener('mousemove', (e) => {
+    if (window.innerWidth < 760) return;
+    const x = e.clientX / window.innerWidth - .5;
+    const y = e.clientY / window.innerHeight - .5;
+    tx = x * 0.9;
+    ty = -y * 0.65;
+    if (!raf) raf = requestAnimationFrame(apply);
+  }, {passive:true});
+
+  window.addEventListener('mouseleave', () => {
+    tx = 0; ty = 0;
+    if (!raf) raf = requestAnimationFrame(apply);
+  }, {passive:true});
+})();
+</script>
+
 </body>
 </html>
